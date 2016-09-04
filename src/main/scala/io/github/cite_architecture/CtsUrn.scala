@@ -12,7 +12,6 @@ package cite {
     val urn: Urn
   }
 
-
   /** The superclass of Urn objects, implemented by CtsUrn and CiteUrn.
   */
   sealed abstract class Urn {}
@@ -106,25 +105,14 @@ package cite {
     * 2 elements if the passageComponent is a range reference.
     */
     def passageParts = passageComponent.split("-")
-    /** First range part of the passage component of the URN.
-    *
-    * Value is an empty string if there is no passage component
-    * or if the passage component is a node reference.
-    */
-    val rangeBegin = if (passageParts.size > 1) passageParts(0) else ""
-    /** First range part of the passage component of the URN.
-    *
-    * Value is an empty string if there is no passage component
-    * or if the passage component is a node reference.
-    */
-    val rangeEnd = if (passageParts.size > 1) passageParts(1) else ""
+
     /** Single node of the passage component of the URN.
     *
     * Value is an empty string if there is no passage component
     * or if the passage component is a range reference.
     */
     val passageNode = if (passageParts.size == 1) passageParts(0) else ""
-    require(passageSyntaxOk, "Invalid URN syntax.  Error in passage component " + passageComponent)
+
 
     /** Full string value of the passage node's subref.*/
     val passageNodeSubref = subref(passageNode)
@@ -134,13 +122,33 @@ package cite {
     val passageNodeSubrefIndex = subrefIndex(passageNode)
 
 
+
+    /** First range part of the passage component of the URN.
+    *
+    * Value is an empty string if there is no passage component
+    * or if the passage component is a node reference.
+    */
+    val rangeBegin = if (passageParts.size > 1) passageParts(0) else ""
     /** Full string value of the range beginning's subref.*/
-    val rangeBeginSubref = subref(rangeBegin)
+    def rangeBeginSubref = {
+      rangeBegin match {
+        case "" => "HORRIBLE ISSUE: NO RANGE BEGIN"
+        case default =>  "FOUND DEAFULT " + default
+      }
+    }
     /** Indexed text of the range beginning's subref.*/
     val rangeBeginSubrefText = subrefText(rangeBegin)
     /** Index value of the range beginning's subref.*/
     val rangeBeginSubrefIndex = subrefIndex(rangeBegin)
 
+
+
+    /** Second range part of the passage component of the URN.
+    *
+    * Value is an empty string if there is no passage component
+    * or if the passage component is a node reference.
+    */
+    val rangeEnd = if (passageParts.size > 1) passageParts(1) else ""
     /** Full string value of the range ending's subref.*/
     val rangeEndSubref = subref(rangeEnd)
     /** Indexed text of the range ending's subref.*/
@@ -148,71 +156,12 @@ package cite {
     /** Index value of the range ending's subref.*/
     val rangeEndSubrefIndex = subrefIndex(rangeEnd)
 
+    require(passageSyntaxOk, "Invalid URN syntax.  Error in passage component " + passageComponent)
+
     /** True if the URN refers to a range.*/
     def isRange = {
       passageComponent contains "-"
     }
-
-    /** Extracts the subref from a passage node value.
-    *
-    * @param s A passage node value, a reference to
-    * a single node or to the beginning or ending node
-    * of a range reference.
-    */
-    def subref(s: String) = {
-      val psgSplit = passageComponent.split("@")
-      psgSplit.size match {
-        case 2 => psgSplit(1)
-        case _ => ""
-      }
-    }
-
-    /** Extracts the cited text of a subref from a passage node value.
-    *
-    * @param s A passage node value, a reference to
-    * a single node or to the beginning or ending node
-    * of a range reference.
-    */
-    def subrefText(s: String) = {
-      val psgSplit = passageComponent.split("@")
-      psgSplit.size match {
-        case 2 => {
-         val txtRE = """([^\[]+).+""".r
-         psgSplit(1) match {
-           case txtRE(sr) => {
-             //println ("Yielding " + sr)
-             sr
-           }
-           case default => default
-        }
-       }
-       case _ => ""
-     }
-    }
-
-
-    /** Extracts the explicitly given index of a subref
-    * from a passage node value.
-    *
-    * The index value must be an integer.
-    * @param s A passage node value, a reference to
-    * a single node or to the beginning or ending node
-    * of a range reference.
-    */
-    def subrefIndex(subref: String) = {
-      // hairball RE to extract indexing string
-      // from within square brackets.
-      val idxRE = """[^\[]+\[([^\]]+)\]""".r
-      subref match {
-        case idxRE(i) => try {
-          i.toInt
-        } catch {
-          case e: NumberFormatException => None
-        }
-        case _ => None
-      }
-    }
-
 
     /** True if URN's syntax for required components is valid.*/
     def componentSyntaxOk = {

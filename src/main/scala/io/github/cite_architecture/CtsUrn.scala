@@ -54,7 +54,7 @@ package cite {
     */
     def work = {
       workParts.size match {
-        case w if 2 until 4 contains w => workParts(1)
+        case w if 2 until 5 contains w => workParts(1)
         case _ => ""
       }
     }
@@ -64,7 +64,7 @@ package cite {
     */
     def version = {
       workParts.size match {
-        case v if 3 until 4 contains v => workParts(2)
+        case v if 3 until 5 contains v => workParts(2)
         case _ => ""
       }
     }
@@ -132,8 +132,8 @@ package cite {
     /** Full string value of the range beginning's subref.*/
     def rangeBeginSubref = {
       rangeBegin match {
-        case "" => "HORRIBLE ISSUE: NO RANGE BEGIN"
-        case default =>  "FOUND DEAFULT " + default
+        case "" => ""
+        case default =>  default
       }
     }
     /** Indexed text of the range beginning's subref.*/

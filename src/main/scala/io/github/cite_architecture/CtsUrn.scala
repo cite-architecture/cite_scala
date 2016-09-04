@@ -25,6 +25,12 @@ package cite {
   * againt the CtsUrn specification
   */
   case class CtsUrn  (val urnString: String) extends Urn {
+    /** Array of top-level, colon-delimited components.
+    *
+    * The Array will have 4 elements if the optional passage
+    * component is omitted;  if will 5 elements if the passage
+    * component is included.
+    */
     val components = urnString.split(":")
 
     // Verify syntax of submitted String:
@@ -40,6 +46,39 @@ package cite {
     def workComponent = components(3)
     /** Array of dot-separate parts of the workComponent.*/
     def workParts = workComponent.split("\\.")
+    /** Textgroup part of work hierarchy.
+    */
+    def textGroup = workParts(0)
+    /** Work part of work hierarchy.
+    *
+    * Value is an empty string if there is no work part.
+    */
+    def work = {
+      workParts.size match {
+        case w if 2 until 4 contains w => workParts(1)
+        case _ => ""
+      }
+    }
+    /** Version part of work hierarchy.
+    *
+    * Value is an empty string if there is no version part.
+    */
+    def version = {
+      workParts.size match {
+        case v if 3 until 4 contains v => workParts(2)
+        case _ => ""
+      }
+    }
+    /** Exemplar part of work hierarchy.
+    *
+    * Value is an empty string if there is no exemplar part.
+    */
+    def exemplar = {
+      workParts.size match {
+        case 4 => workParts(3)
+        case _ => ""
+      }
+    }
     /** Enumerated WorkLevel for this workComponent.*/
     def workLevel = {
       workParts.size match {
@@ -195,7 +234,7 @@ package cite {
     val TextGroup, Work, Version, Exemplar = Value
   }
 
-  
+
   case class CiteUrn  (val urnString: String) extends Urn {
     val components = urnString.split(":")
     //components

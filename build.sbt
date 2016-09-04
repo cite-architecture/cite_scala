@@ -1,7 +1,7 @@
 // Needed for specs2
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 // Repository for
-//resolvers += "uh-nexus" at "http://beta.hpcc.uh.edu/nexus/content/groups/public"
+resolvers += "uh-nexus" at "http://beta.hpcc.uh.edu/nexus/content/groups/public"
 
 //libraryDependencies += "edu.harvard.chs" % "cite" % "3.1.0"
 //libraryDependencies += "edu.unc.epidoc" % "transcoder" % "1.2-SNAPSHOT"
@@ -21,9 +21,11 @@ initialCommands in (Test, console) := """ammonite.Main().run()"""
 scalaVersion := "2.11.8"
 
 name := "cite"
-
-version := "1.0.0"
+organization := "io.github.cite_architecture"
+version := "1.1.1"
 
 publishTo := Some("Sonatype Snapshots Nexus" at "http://beta.hpcc.uh.edu/nexus/content/repositories/releases/")
+// or http://beta.hpcc.uh.edu/nexus/content/groups/public ??
+//publishTo := Some("Houston"  at  "http://beta.hpcc.uh.edu/nexus/content/repositories/releases/io/github/cite_architecture/")
 
 credentials += Credentials(Path.userHome / "nexusauth.txt" )

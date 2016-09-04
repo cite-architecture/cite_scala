@@ -176,9 +176,18 @@ package cite {
     def subrefText(s: String) = {
       val psgSplit = passageComponent.split("@")
       psgSplit.size match {
-        case 2 => psgSplit(0)
-        case _ => ""
-      }
+        case 2 => {
+         val txtRE = """([^\[]+).+""".r
+         psgSplit(1) match {
+           case txtRE(sr) => {
+             //println ("Yielding " + sr)
+             sr
+           }
+           case default => default
+        }
+       }
+       case _ => ""
+     }
     }
 
 

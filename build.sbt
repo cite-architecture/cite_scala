@@ -22,7 +22,7 @@ scalaVersion := "2.11.8"
 
 name := "cite"
 organization := "io.github.cite_architecture"
-version := "1.1.1"
+version := "1.1.3"
 
 publishTo := Some("Sonatype Snapshots Nexus" at "http://beta.hpcc.uh.edu/nexus/content/repositories/releases/")
 // or http://beta.hpcc.uh.edu/nexus/content/groups/public ??

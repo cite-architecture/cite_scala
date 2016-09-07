@@ -2,19 +2,8 @@ package io.github.cite_architecture
 
 package cite {
 
-  /** Trait for any citable scholarly resource.
-  *
-  * Implementing classes must have a Urn value
-  * identifying the object.  An example in the cite
-  * library is the Orca class.
-  */
-  trait Citable {
-    val urn: Urn
-  }
 
-  /** The superclass of Urn objects, implemented by CtsUrn and CiteUrn.
-  */
-  sealed abstract class Urn {}
+
 
 
   /** A URN for a canonically text or passage of text.
@@ -105,6 +94,13 @@ package cite {
     * 2 elements if the passageComponent is a range reference.
     */
     def passageParts = passageComponent.split("-")
+
+    /* * Depth of citation hierarchy. */
+    // What is best value in case of range? Deepest?
+    // Or shouldn't we better have depth on each node,
+    // as we do with subreferencing?
+    //def passageDepth = {}
+
 
     /** Single node of the passage component of the URN.
     *

@@ -7,7 +7,7 @@ package cite {
     // a tuple of CtsUrn and String of text
   }
 
-  class Ocho2Text() {
+  trait Ocho2Text() {
     // a Vector of Ocho2Nodes
   }
 }

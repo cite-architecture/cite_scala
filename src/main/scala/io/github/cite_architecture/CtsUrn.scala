@@ -189,9 +189,5 @@ package cite {
   }
 
 
-  case class CiteUrn  (val urnString: String) extends Urn {
-    val components = urnString.split(":")
-    //components
-  }
 
 }

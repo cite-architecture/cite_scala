@@ -3,7 +3,9 @@ package io.github.cite_architecture
 /** The cite library supports working with canonical identifers
 * used in citing scholarly resources. */
 package object cite {
-
+    // or a type...
+    //type Ocho2Text = Vector[Ohco2Node]
+      // a Vector of Ocho2Nodes
 
 
   /** Extracts the subref from a passage node value.
@@ -63,5 +65,8 @@ package object cite {
       case _ => None
     }
   }
+
+
+  type DseEdition =  Vector[DseNode]
 
 }

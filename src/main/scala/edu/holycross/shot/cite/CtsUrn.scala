@@ -12,7 +12,7 @@ package cite {
     /** Array of top-level, colon-delimited components.
     *
     * The Array will have 4 elements if the optional passage
-    * component is omitted;  if will 5 elements if the passage
+    * component is omitted;  if will have 5 elements if the passage
     * component is included.
     */
     val components = urnString.split(":")
@@ -25,11 +25,10 @@ package cite {
 
     /** Required namespace component of the URN.*/
     def namespace = components(2)
-
     /** Required work component of the URN.*/
     def workComponent = components(3)
     /** Array of dot-separate parts of the workComponent.*/
-    def workParts = workComponent.split("\\.")
+    def workParts = workComponent.split("""\.""")
     /** Textgroup part of work hierarchy.
     */
     def textGroup = workParts(0)
@@ -89,7 +88,7 @@ package cite {
     * 1 element if the passageComponent is a node reference, and
     * 2 elements if the passageComponent is a range reference.
     */
-    def passageParts = passageComponent.split("-")
+    def passageParts = passageComponent.split("-").toVector
 
     /* * Depth of citation hierarchy. */
     // What is best value in case of range? Deepest?
@@ -105,6 +104,8 @@ package cite {
     */
     val passageNode = if (passageParts.size == 1) passageParts(0) else ""
 
+    val passageNodeParts = passageNode.split("@")
+    val passageNodeRef = passageNodeParts(0)
 
     /** Full string value of the passage node's subref.*/
     val passageNodeSubref = subref(passageNode)
@@ -121,6 +122,9 @@ package cite {
     * or if the passage component is a node reference.
     */
     val rangeBegin = if (passageParts.size > 1) passageParts(0) else ""
+    val rangeBeginParts = rangeBegin.split("@")
+    val rangeBeginRef = rangeBeginParts(0)
+
     /** Full string value of the range beginning's subref.*/
     def rangeBeginSubref = {
       rangeBegin match {
@@ -141,6 +145,8 @@ package cite {
     * or if the passage component is a node reference.
     */
     val rangeEnd = if (passageParts.size > 1) passageParts(1) else ""
+    val rangeEndParts = rangeEnd.split("@")
+    val rangeEndRef = rangeEndParts(0)
     /** Full string value of the range ending's subref.*/
     val rangeEndSubref = subref(rangeEnd)
     /** Indexed text of the range ending's subref.*/
@@ -172,6 +178,20 @@ package cite {
       }
     }
 
+
+
+    def dropPassage = {
+      CtsUrn("urn:cts:" + namespace + ":" + workComponent + ":")
+    }
+
+    def dropSubref = {
+      val baseString = dropPassage
+      if (isRange) {
+        CtsUrn(baseString + rangeBeginRef + "-" + rangeEndRef)
+      } else {
+        CtsUrn(baseString + passageNodeRef)
+      }
+    }
 
     override def toString() = {
       urnString

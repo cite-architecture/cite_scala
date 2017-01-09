@@ -67,6 +67,5 @@ package object cite {
   }
 
 
-  type DseEdition =  Vector[DseNode]
 
 }

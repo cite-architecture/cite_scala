@@ -1,4 +1,4 @@
-package io.github.cite_architecture
+package edu.holycross.shot
 
 
 package cite {

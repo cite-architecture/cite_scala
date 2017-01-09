@@ -1,5 +1,5 @@
 
-package io.github.cite_architecture.cite
+package edu.holycross.shot.cite
 
 // Modelled on examples in this blog post:
 //http://blog.scalac.io/2015/03/27/specs2-notes.html

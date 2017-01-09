@@ -1,4 +1,4 @@
-package io.github.cite_architecture
+package edu.holycross.shot
 
 /** The cite library supports working with canonical identifers
 * used in citing scholarly resources. */

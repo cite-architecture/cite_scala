@@ -1,10 +1,6 @@
-package io.github.cite_architecture
+package edu.holycross.shot
 
 package cite {
-
-
-
-
 
   /** A URN for a canonically text or passage of text.
   *

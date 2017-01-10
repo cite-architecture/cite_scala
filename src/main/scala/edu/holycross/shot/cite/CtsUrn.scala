@@ -115,7 +115,12 @@ package cite {
       }
     }
     def passageComponent = {
-      passageComponentOption.get
+      try {
+        passageComponentOption.get
+      } catch {
+          case e: java.util.NoSuchElementException => throw CiteException("No passage component defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
     }
 
     /** Array of hyphen-separated parts of the passageComponent.
@@ -143,18 +148,73 @@ package cite {
     * Value is an empty string if there is no passage component
     * or if the passage component is a range reference.
     */
-    val passageNode = if (passageParts.size == 1) passageParts(0) else ""
+    val passageNodeOption: Option[String] = {
+      if (passageParts.size == 1) Some(passageParts(0)) else None
+    }
+    def passageNode: String = {
+      try {
+        passageNodeOption.get
+      }  catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+      case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
-    val passageNodeParts = passageNode.split("@")
-    val passageNodeRef = passageNodeParts(0)
+    def passageNodeParts: Array[String] = {
+      passageNodeOption match {
+        case None => Array.empty[String]
+        case _ => passageNode.split("@")
+      }
+    }
+    def passageNodeRefOption: Option[String] = {
+      if (passageNodeParts.isEmpty) None else Some(passageNodeParts(0))
+    }
+    def passageNodeRef = {
+      try {
+        passageNodeRefOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No passage component defined in " + urnString)
+      case otherEx : Throwable => throw( otherEx)
+      }
+    }
+
 
     /** Full string value of the passage node's subref.*/
-    val passageNodeSubref = subref(passageNode)
+    def passageNodeSubrefOption: Option[String] = {
+      try {
+        Some(subref(passageNode))
+      } catch {
+        case e: java.util.NoSuchElementException => None
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+    def passageNodeSubref = {
+      try {
+        passageNodeSubrefOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
     /** Indexed text of the passage node's subref.*/
-    val passageNodeSubrefText = subrefText(passageNode)
-    /** Index value of the passage node's subref.*/
-    val passageNodeSubrefIndex = subrefIndex(passageNode)
+    def passageNodeSubrefText = {
+      try {
+        subrefText(passageNode)
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
 
+    }
+    /** Index value of the passage node's subref.*/
+    def passageNodeSubrefIndex = {
+      try {
+        subrefIndex(passageNode)
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
 
     /** First range part of the passage component of the URN.

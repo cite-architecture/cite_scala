@@ -245,7 +245,7 @@ package cite {
       workContainedIn(urn) || urn.workContainedIn(this)
     }
     def urnMatch(urn: CtsUrn): Boolean = {
-      false
+      namespace == urn.namespace && workMatch(urn) && passageMatch(urn)
     }
 
     override def toString() = {

@@ -7,14 +7,7 @@ import org.scalatest.FlatSpec
 class CtsUrnMatchingSpec extends FlatSpec {
 
 
-  "CTS URN matching" should "match identical passages when level of hierarchy differs" in pending /*(){
-    val iliadUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001:1.1")
-    val editionUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1")
-
-    assert  (iliadUrn.urnMatch(editionUrn))
-  }*/
-
-  it should "determine if a passage reference in one URN appears in the passage hierarchy of another URN" in {
+  "CTS URN matching" should "determine if a passage reference in one URN appears in the passage hierarchy of another URN" in {
     val highLevel = CtsUrn("urn:cts:greekLit:tlg5026.msA.hmt:1.1")
     val lowLevel = CtsUrn("urn:cts:greekLit:tlg5026.msA.hmt:1.1.lemma")
     assert(lowLevel.passageContainedIn(highLevel))
@@ -36,5 +29,13 @@ class CtsUrnMatchingSpec extends FlatSpec {
     val lowLevel = CtsUrn("urn:cts:greekLit:tlg5026.msA.hmt:1.1")
     assert(lowLevel.workMatch(highLevel))
     assert(highLevel.workMatch(lowLevel))
+  }
+
+
+  it should "match two URNs differing only depth of work hierarchy" in {
+    val notionalUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001:1.1")
+    val editionUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1")
+    assert  (notionalUrn.urnMatch(editionUrn))
+    assert (editionUrn.urnMatch(notionalUrn))
   }
 }

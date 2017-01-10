@@ -193,6 +193,61 @@ package cite {
       }
     }
 
+    /** true if work reference in `urn` is contained
+    * in or equal to the work reference of this CtsUrn.
+    *
+    * @param urn CtsUrn to compare to this one.
+    */
+    def workContainedIn(urn: CtsUrn): Boolean = {
+      val psg = urn.workComponent
+      val str = "(^" + psg + """\.)|(^""" + psg + "$)"
+      val pttrn = str.r
+
+      val res = pttrn.findFirstIn(workComponent.toString)
+      println("Result of matching  " + str + " in " + urn.toString + " == " + res)
+      res match {
+        case None => false
+        case _ => true
+      }
+    }
+    /** true if passage reference in `urn` is contained
+    * in or equal to the passage reference of this CtsUrn.
+    *
+    * @param urn CtsUrn to compare to this one.
+    */
+    def passageContainedIn(urn: CtsUrn): Boolean = {
+      val psg = urn.dropSubref.passageComponent
+      val str = "(^" + psg + """\.)|(^""" + psg + "$)"
+      val pttrn = str.r
+
+      val res = pttrn.findFirstIn(dropSubref.passageComponent.toString)
+      println("Result of matching  " + str + " in " + urn.toString + " == " + res)
+      res match {
+        case None => false
+        case _ => true
+      }
+    }
+
+    /** true if the passage reference of either `urn`
+    * of this CtsUrn is contained by the other.
+    *
+    * @param urn CtsUrn to compare to this one
+    */
+    def passageMatch(urn: CtsUrn): Boolean = {
+      passageContainedIn(urn) || urn.passageContainedIn(this)
+    }
+    /** true if the passage reference of either `urn`
+    * of this CtsUrn is contained by the other.
+    *
+    * @param urn CtsUrn to compare to this one
+    */
+    def workMatch(urn: CtsUrn): Boolean = {
+      workContainedIn(urn) || urn.workContainedIn(this)
+    }
+    def urnMatch(urn: CtsUrn): Boolean = {
+      false
+    }
+
     override def toString() = {
       urnString
     }

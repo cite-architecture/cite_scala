@@ -1,22 +1,23 @@
 
 package edu.holycross.shot.cite
 
-// Modelled on examples in this blog post:
-//http://blog.scalac.io/2015/03/27/specs2-notes.html
-//
-// I've still got tons to learn about specs2.
-//
-import org.specs2.mutable.Specification
 
-class TestCiteUrnValidation extends Specification {
+import org.scalatest.FlatSpec
 
-  "A CiteUrn" should {
-   "throw an IllegalArgumentException if too few components" in {
+class TestCiteUrnValidation extends FlatSpec {
 
-     CiteUrn("urn:cite:hmt") must  throwA[java.lang.IllegalArgumentException]
-   }
+  "A CiteUrn" should "throw an IllegalArgumentException if too few components" in {
+     try {
+      CiteUrn("urn:cite:hmt")
+     } catch {
+       case e: IllegalArgumentException =>
+       case _ : Throwable => fail("Constructor should have thrown an IllegalArgumentException exception")
+     }
+    //  must  throwA[java.lang.IllegalArgumentException]
+   //}
   }
 
+/*
   "A CiteUrn" should {
    "throw an IllegalArgumentException if too many components" in {
 
@@ -40,6 +41,7 @@ class TestCiteUrnValidation extends Specification {
   "A CiteUrn" should {
     "throw an IllegalArgumentException if object hierarchy exceeds 3 levels" in {
      CiteUrn("urn:cite:hmt:msA.12r.v1.subversion") must  throwA[java.lang.IllegalArgumentException]
-    }
-  }
+   }
+  }*/
+
 }

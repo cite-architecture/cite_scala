@@ -12,12 +12,12 @@ class CtsUrnOpsSpec extends FlatSpec {
     assert  (iliadUrn.dropPassage == CtsUrn("urn:cts:greekLit:tlg0012.tlg001:"))
   }
 
-  "A CTS URN with subreference" should "allow striping off subreference" in {
+  "A CTS URN with subreference" should "allow stripping off subreference" in {
     val iliadUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001:1.1@μῆνιν")
     assert  (iliadUrn.dropSubref == CtsUrn("urn:cts:greekLit:tlg0012.tlg001:1.1"))
   }
 
-  "A CTS URN with subreference on a range node" should "allow striping off subreference" in {
+  "A CTS URN with subreference on a range node" should "allow stripping off subreference" in {
     val iliadUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001:1.1@μῆνιν-1.2")
     assert  (iliadUrn.dropSubref == CtsUrn("urn:cts:greekLit:tlg0012.tlg001:1.1-1.2"))
   }

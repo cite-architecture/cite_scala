@@ -222,21 +222,75 @@ package cite {
     * Value is an empty string if there is no passage component
     * or if the passage component is a node reference.
     */
-    val rangeBegin = if (passageParts.size > 1) passageParts(0) else ""
-    val rangeBeginParts = rangeBegin.split("@")
-    val rangeBeginRef = rangeBeginParts(0)
+    def rangeBeginOption: Option[String] = {
+      if (passageParts.size > 1) Some(passageParts(0)) else None
+    }
+    def rangeBegin = {
+      try {
+        rangeBeginOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+    def rangeBeginParts = {
+      rangeBeginOption match {
+        case None => Array.empty[String]
+        case _ => rangeBegin.split("@")
+      }
+    }
+    def rangeBeginRefOption: Option[String] = {
+      if (rangeBeginParts.isEmpty) None else Some(rangeBeginParts(0))
+    }
+    def rangeBeginRef = {
+      try {
+        rangeBeginRefOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
     /** Full string value of the range beginning's subref.*/
+    def rangeBeginSubrefOption = {
+      rangeBeginOption match {
+        case None => None
+        case _ =>  Some(subref(rangeBegin))
+      }
+    }
     def rangeBeginSubref = {
-      rangeBegin match {
-        case "" => ""
-        case default =>  default
+      try {
+        rangeBeginSubrefOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
       }
     }
     /** Indexed text of the range beginning's subref.*/
-    val rangeBeginSubrefText = subrefText(rangeBegin)
+    def rangeBeginSubrefTextOption: Option[String] = {
+      rangeBeginOption match {
+        case None => None
+        case _ => Some(subrefText(rangeBegin))
+      }
+    }
+    def rangeBeginSubrefText = {
+      try {
+        rangeBeginSubrefTextOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+
     /** Index value of the range beginning's subref.*/
-    val rangeBeginSubrefIndex = subrefIndex(rangeBegin)
+    def rangeBeginSubrefIndex = {
+      try {
+        subrefIndex(rangeBegin)
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
 
 
@@ -255,6 +309,14 @@ package cite {
     /** Index value of the range ending's subref.*/
     val rangeEndSubrefIndex = subrefIndex(rangeEnd)
 
+
+
+
+
+
+
+
+/* **************************************************************************     */
     require(passageSyntaxOk, "Invalid URN syntax.  Error in passage component " + passageComponent)
 
     /** True if the URN refers to a range.*/

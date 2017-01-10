@@ -7,21 +7,20 @@ import org.scalatest.FlatSpec
 
 class CtsUrnSubrefSpec extends FlatSpec {
 
-  "CtsUrn subref values" should "have empty string values when no subref is defined" in {
+  "CtsUrn subref values" should "have a none option when no subref is defined" in pending /*{
     val noSubref = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1")
     assert(noSubref.passageNodeSubref.isEmpty)
     assert(noSubref.rangeBeginSubref.isEmpty)
     assert(noSubref.rangeEndSubref.isEmpty)
-  }
+  }*/
 
-  "A CtsUrn subref" should "have a string value for passage node when a subref is defined without index" in {
+  "A CtsUrn subref" should "have a string value for passage node when a subref is defined without index" in pending /*(){
     val psgSubref = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath")
     assert(psgSubref.passageNodeSubref == "wrath")
     assert(psgSubref.rangeBeginSubref.isEmpty)
     assert(psgSubref.rangeEndSubref.isEmpty)
   }
 
-/*
 
 
     val psgSubrefIndexed = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath[1]")

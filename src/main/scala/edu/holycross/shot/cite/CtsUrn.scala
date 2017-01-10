@@ -32,15 +32,24 @@ package cite {
     /** Textgroup part of work hierarchy.
     */
     def textGroup = workParts(0)
+
+
+
+
+
     /** Work part of work hierarchy.
     *
     * Value is an empty string if there is no work part.
     */
-    def work = {
+    def workOption: Option[String] = {
       workParts.size match {
-        case w if 2 until 5 contains w => workParts(1)
-        case _ => ""
+        case w if 2 until 5 contains w => Some(workParts(1))
+        case _ => None
       }
+    }
+
+    def work = {
+      workOption.get
     }
     /** Version part of work hierarchy.
     *
@@ -76,19 +85,28 @@ package cite {
     *
     * Value is an empty string if there is no passage component.
     */
-    def passageComponent = {
+    def passageComponentOption: Option[String] = {
       components.size match {
-        case 5 => components(4)
-        case _ => ""
+        case 5 => Some(components(4))
+        case _ => None
       }
     }
+    def passageComponent = {
+      passageComponentOption.get
+    }
+
     /** Array of hyphen-separated parts of the passageComponent.
     *
     * The Array will contain 0 elements if passageComponent is empty,
     * 1 element if the passageComponent is a node reference, and
     * 2 elements if the passageComponent is a range reference.
     */
-    def passageParts = passageComponent.split("-").toVector
+    def passageParts: Array[String] ={
+      passageComponentOption match {
+        case None => Array.empty[String]
+        case s: Some[String] => s.get.split("-")
+      }
+    }
 
     /* * Depth of citation hierarchy. */
     // What is best value in case of range? Deepest?
@@ -173,6 +191,12 @@ package cite {
     /** True if URN's syntax for optional passage component is valid.*/
     def passageSyntaxOk = {
       passageParts.size match {
+        case 0 => {
+          passageComponentOption match {
+            case None => true
+            case _ => false
+          }
+        }
         case 1 => if (passageComponent.contains("-")) false else true
         case 2 => ((rangeBegin.size > 0) && (rangeEnd.size > 0))
       }
@@ -204,7 +228,7 @@ package cite {
       val pttrn = str.r
 
       val res = pttrn.findFirstIn(workComponent.toString)
-      println("Result of matching  " + str + " in " + urn.toString + " == " + res)
+      //println("Result of matching  " + str + " in " + urn.toString + " == " + res)
       res match {
         case None => false
         case _ => true
@@ -221,7 +245,7 @@ package cite {
       val pttrn = str.r
 
       val res = pttrn.findFirstIn(dropSubref.passageComponent.toString)
-      println("Result of matching  " + str + " in " + urn.toString + " == " + res)
+      //("Result of matching  " + str + " in " + urn.toString + " == " + res)
       res match {
         case None => false
         case _ => true

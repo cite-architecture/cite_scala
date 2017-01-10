@@ -1,18 +1,30 @@
-
 package edu.holycross.shot.cite
 
-// Modelled on examples in this blog post:
-//http://blog.scalac.io/2015/03/27/specs2-notes.html
-//
-// I've still got tons to learn about specs2.
-//
-import org.specs2.mutable.Specification
-import org.specs2.specification.Scope
+import org.scalatest.FlatSpec
 
-class TestCtsUrnWorkParts extends Specification {
+class CtsUrnWorkSpec extends FlatSpec {
+
+  "The work component of a CtsUrn" should "always have a text group identifier" in {
+    val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
+    assert(groupLevel.textGroup == "tlg0012")
+  }
+
+  it should "have an empty work option if no work is given" in {
+    val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
+    groupLevel.workOption match {
+      case None => assert(1 == 1)
+      case _ => fail("Incorrect option for work")
+    }
+  }
+
+  it should "retrieve a string value for a work identifier" in {
+    val workLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001:")
+    assert(workLevel.work == "tlg001")
+  }
+  /*
   class Context extends Scope {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
-    val workLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001:")
+
     val versionLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:")
     val exemplarLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA.lextokens:")
 
@@ -60,6 +72,6 @@ class TestCtsUrnWorkParts extends Specification {
       workLevel.exemplar == ""
     }
   }
-
+*/
 
 }

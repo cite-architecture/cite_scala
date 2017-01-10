@@ -1,19 +1,29 @@
 
 package edu.holycross.shot.cite
 
-// Modelled on examples in this blog post:
-//http://blog.scalac.io/2015/03/27/specs2-notes.html
-//
-// I've still got tons to learn about specs2.
-//
-import org.specs2.mutable.Specification
-import org.specs2.specification.Scope
 
-  class TestCtsUrnSubrefs extends Specification {
+import org.scalatest.FlatSpec
 
-  class Context extends Scope {
+
+class CtsUrnSubrefSpec extends FlatSpec {
+
+  "CtsUrn subref values" should "have empty string values when no subref is defined" in {
     val noSubref = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1")
+    assert(noSubref.passageNodeSubref.isEmpty)
+    assert(noSubref.rangeBeginSubref.isEmpty)
+    assert(noSubref.rangeEndSubref.isEmpty)
+  }
+
+  "A CtsUrn subref" should "have a string value for passage node when a subref is defined without index" in {
     val psgSubref = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath")
+    assert(psgSubref.passageNodeSubref == "wrath")
+    assert(psgSubref.rangeBeginSubref.isEmpty)
+    assert(psgSubref.rangeEndSubref.isEmpty)
+  }
+
+/*
+
+
     val psgSubrefIndexed = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath[1]")
 
     val rangeBeginSubref = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath-1.10")
@@ -159,5 +169,5 @@ import org.specs2.specification.Scope
       rangeBothIndexedSubref.rangeBeginSubref == "wrath[1]"
     }
   }
-
+*/
 }

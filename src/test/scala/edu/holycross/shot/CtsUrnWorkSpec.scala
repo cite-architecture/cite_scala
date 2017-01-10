@@ -36,7 +36,7 @@ class CtsUrnWorkSpec extends FlatSpec {
     val workLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001:")
     assert(workLevel.work == "tlg001")
   }
-  it should "throw a CtsUrn exception when trying to retrieve a non-existent work value" in {
+  it should "throw a Cite exception when trying to retrieve a non-existent work value" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     try {
       groupLevel.work
@@ -50,7 +50,7 @@ class CtsUrnWorkSpec extends FlatSpec {
     val versionLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:")
     assert(versionLevel.version == "msA")
   }
-  it should "throw a CtsUrn exception when trying to retrieve a non-existent version value" in {
+  it should "throw a Cite exception when trying to retrieve a non-existent version value" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     try {
       groupLevel.version
@@ -65,7 +65,7 @@ class CtsUrnWorkSpec extends FlatSpec {
     val versionLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA.tokens:")
     assert(versionLevel.exemplar == "tokens")
   }
-  it should "throw a CtsUrn exception when trying to retrieve a non-existent exemplar value" in {
+  it should "throw a Cite exception when trying to retrieve a non-existent exemplar value" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     try {
       groupLevel.exemplar

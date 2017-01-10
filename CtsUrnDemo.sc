@@ -14,7 +14,7 @@ def demoNode(u: CtsUrn) {
 
   u.passageNodeSubrefTextOption match {
     case None => println("\tNo subreference text")
-    case subref : Some[String]=> println("\tCited text of subref is #" + subref.get + "#")
+    case subref : Some[String]=> println("\tCited text of subref is " + subref.get)
   }
   u.passageNodeSubrefIndexOption match {
     case None => println("\tNo subreference index")
@@ -25,43 +25,43 @@ def demoNode(u: CtsUrn) {
 def demoRange(u: CtsUrn) {
   println("\n\tRange cited")
   println("\tFirst node is " + u.rangeBegin)
-/*
+
   u.rangeBeginSubrefOption match {
     case None => println("\tNo subreference")
     case subref: Some[String] => {
-      println("\tFull subref is " + subref)
+      println("\tFull subref is " + subref.get)
     }
   }
   u.rangeBeginSubrefTextOption match {
     case None => println("\tNo subreference text")
-    case subref: Some[String] => println("\tCited text of subref is " + subref)
+    case subref: Some[String] => println("\tCited text of subref is " + subref.get)
   }
   u.rangeBeginSubrefIndexOption match {
     case None => println("\tNo subreference index")
-    case i: Some[Int] => println("\tIndex of subref is " + i)
+    case i: Some[Int] => println("\tIndex of subref is " + i.get)
   }
-*/
+
 
 
 
   println("\n\tSecond node is " + u.rangeEnd)
-/*
+
   u.rangeEndSubrefOption match {
     case None => println("\tNo subreference")
     case subref : Some[String]=> {
-      println("\tFull subref is " + subref)
+      println("\tFull subref is " + subref.get)
     }
   }
 
   u.rangeEndSubrefTextOption match {
     case None => println("\tNo subreference text")
-    case subref: Some[String] => println("\tCited text of subref is " + subref)
+    case subref: Some[String] => println("\tCited text of subref is " + subref.get)
   }
   u.rangeEndSubrefIndexOption match {
     case None => println("\tNo subreference index")
-    case i: Some[Int] => println("\tIndex of subref is " + i)
+    case i: Some[Int] => println("\tIndex of subref is " + i.get)
   }
-*/
+
 }
 
 def showOff(s: String) {

@@ -193,7 +193,7 @@ package cite {
       try {
         passageNodeSubrefOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node subref defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -455,7 +455,12 @@ package cite {
     def dropSubref = {
       val baseString = dropPassage
       if (isRange) {
-        CtsUrn(baseString + rangeBeginRef + "-" + rangeEndRef)
+        if (rangeBeginRef == rangeEndRef) {
+          CtsUrn(baseString + rangeBeginRef)
+        } else {
+          CtsUrn(baseString + rangeBeginRef + "-" + rangeEndRef)
+        }
+
       } else {
         CtsUrn(baseString + passageNodeRef)
       }

@@ -18,10 +18,10 @@ package cite {
     val components = urnString.split(":")
 
     // Verify syntax of submitted String:
-    require(components(0) == "urn", "Invalid URN syntax: " + urnString + ". First component must be 'urn'.")
-    require(components(1) == "cts", "Invalid URN syntax: " + urnString + ". Second component must be 'cts'.")
-    require(componentSyntaxOk, "Invalid URN syntax: " + urnString + ". Wrong number of components.")
-    require((workParts.size < 5), "Invalid URN syntax. Too many parts in work component " + workComponent )
+    require(components(0) == "urn", "invalid URN syntax: " + urnString + ". First component must be 'urn'.")
+    require(components(1) == "cts", "invalid URN syntax: " + urnString + ". Second component must be 'cts'.")
+    require(componentSyntaxOk, "invalid URN syntax: " + urnString + ". Wrong number of components.")
+    require((workParts.size < 5), "invalid URN syntax. Too many parts in work component " + workComponent )
 
     /** Required namespace component of the URN.*/
     def namespace = components(2)

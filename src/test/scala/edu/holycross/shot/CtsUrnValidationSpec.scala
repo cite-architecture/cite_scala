@@ -1,19 +1,18 @@
-
 package edu.holycross.shot.cite
-// Modelled on examples in this blog post:
-//http://blog.scalac.io/2015/03/27/specs2-notes.html
-//
-// I've still got tons to learn about specs2.
-//
-import org.specs2.mutable.Specification
 
-class TestCtsUrnValidation extends Specification {
+import org.scalatest.FlatSpec
 
-  "A CtsUrn" should {
-   "throw an IllegalArgumentException if too few components" in {
+class CtsUrnValidationSpec extends FlatSpec {
 
-     CtsUrn("urn:cts:greekLit:tlg0012.tlg001") must  throwA[java.lang.IllegalArgumentException]
+  "A Cts Urn constructor" should "throw an IllegalArgumentException if the the URN string has too few components" in {
+    try {
+      CtsUrn("urn:cts:greekLit:tlg0012.tlg001")
+    } catch {
+      case ex : IllegalArgumentException => assert(ex.getMessage() == "requirement failed: invalid URN syntax: urn:cts:greekLit:tlg0012.tlg001. Wrong number of components.")
+    }
    }
+
+   /*
  }
 
  "A CtsUrn" should {
@@ -51,6 +50,6 @@ class TestCtsUrnValidation extends Specification {
     "throw an IllegalArgumentException if a range has an empty ending node" in {
      CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1-") must  throwA[java.lang.IllegalArgumentException]
     }
-  }
+  }*/
 
 }

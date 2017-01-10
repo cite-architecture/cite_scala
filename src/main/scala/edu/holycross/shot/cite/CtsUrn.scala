@@ -49,28 +49,51 @@ package cite {
     }
 
     def work = {
-      workOption.get
+      try {
+        workOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CtsUrnException("No work defined in " + urnString)
+      }
     }
+
+
     /** Version part of work hierarchy.
     *
     * Value is an empty string if there is no version part.
     */
-    def version = {
+    def versionOption: Option[String] = {
       workParts.size match {
-        case v if 3 until 5 contains v => workParts(2)
-        case _ => ""
+        case v if 3 until 5 contains v => Some(workParts(2))
+        case _ => None
       }
     }
+    def version: String = {
+      try {
+        versionOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CtsUrnException("No version defined in " + urnString)
+      }
+    }
+
     /** Exemplar part of work hierarchy.
     *
     * Value is an empty string if there is no exemplar part.
     */
-    def exemplar = {
+    def exemplarOption: Option[String] = {
       workParts.size match {
-        case 4 => workParts(3)
-        case _ => ""
+        case 4 => Some(workParts(3))
+        case _ => None
       }
     }
+
+    def exemplar: String = {
+      try {
+        exemplarOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CtsUrnException("No exemplar defined in " + urnString)
+      }
+    }
+
     /** Enumerated WorkLevel for this workComponent.*/
     def workLevel = {
       workParts.size match {

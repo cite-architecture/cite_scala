@@ -12,13 +12,21 @@ class CtsUrnValidationSpec extends FlatSpec {
     }
    }
 
+   it should "throw an IllegalArgumentException if the `urn` component is missing" in {
+    try {
+
+    CtsUrn("XX:cts:greekLit:tlg0012.tlg001:")
+    } catch {
+      case e: IllegalArgumentException => assert (e.getMessage() == "requirement failed: invalid URN syntax: XX:cts:greekLit:tlg0012.tlg001:. First component must be 'urn'.")
+    }
+   }
    /*
  }
 
  "A CtsUrn" should {
   "throw an IllegalArgumentException if 'urn' component is missing" in {
 
-    CtsUrn("XX:cts:greekLit:tlg0012.tlg001:") must  throwA[java.lang.IllegalArgumentException]
+     must  throwA[java.lang.IllegalArgumentException]
     }
   }
 

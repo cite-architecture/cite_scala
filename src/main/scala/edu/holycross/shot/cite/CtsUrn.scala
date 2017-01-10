@@ -299,19 +299,75 @@ package cite {
     * Value is an empty string if there is no passage component
     * or if the passage component is a node reference.
     */
-    val rangeEnd = if (passageParts.size > 1) passageParts(1) else ""
-    val rangeEndParts = rangeEnd.split("@")
-    val rangeEndRef = rangeEndParts(0)
-    /** Full string value of the range ending's subref.*/
-    val rangeEndSubref = subref(rangeEnd)
-    /** Indexed text of the range ending's subref.*/
-    val rangeEndSubrefText = subrefText(rangeEnd)
-    /** Index value of the range ending's subref.*/
-    val rangeEndSubrefIndex = subrefIndex(rangeEnd)
+    def rangeEndOption: Option[String] = {
+      if (passageParts.size > 2) Some(passageParts(1)) else None
+    }
+    def rangeEnd = {
+      try {
+        rangeEndOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+    def rangeEndParts = {
+      rangeEndOption match {
+        case None => Array.empty[String]
+        case _ => rangeEnd.split("@")
+      }
+    }
+    def rangeEndRefOption: Option[String] = {
+      if (rangeEndParts.isEmpty) None else Some(rangeEndParts(0))
+    }
+    def rangeEndRef = {
+      try {
+        rangeEndRefOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
+    /** Full string value of the range Endning's subref.*/
+    def rangeEndSubrefOption = {
+      rangeEndOption match {
+        case None => None
+        case _ =>  Some(subref(rangeEnd))
+      }
+    }
+    def rangeEndSubref = {
+      try {
+        rangeEndSubrefOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+    /** Indexed text of the range Endning's subref.*/
+    def rangeEndSubrefTextOption: Option[String] = {
+      rangeEndOption match {
+        case None => None
+        case _ => Some(subrefText(rangeEnd))
+      }
+    }
+    def rangeEndSubrefText = {
+      try {
+        rangeEndSubrefTextOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
-
-
+    /** Index value of the range Endning's subref.*/
+    def rangeEndSubrefIndex = {
+      try {
+        subrefIndex(rangeEnd)
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
 
 

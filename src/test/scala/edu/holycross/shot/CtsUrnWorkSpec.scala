@@ -16,7 +16,6 @@ class CtsUrnWorkSpec extends FlatSpec {
       case _ => fail("Incorrect option for work")
     }
   }
-
   it should "have an empty version option if no version is given" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     groupLevel.versionOption match {
@@ -24,7 +23,6 @@ class CtsUrnWorkSpec extends FlatSpec {
       case _ => fail("Incorrect option for work")
     }
   }
-
   it should "have an empty exemplar option if no exemplar is given" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     groupLevel.versionOption match {
@@ -34,62 +32,46 @@ class CtsUrnWorkSpec extends FlatSpec {
   }
 
 
-  it should "retrieve a string value for a work identifier" in {
+  it should "retrieve a string value for a well-formed work identifier" in {
     val workLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001:")
     assert(workLevel.work == "tlg001")
   }
-
   it should "throw a CtsUrn exception when trying to retrieve a non-existent work value" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     try {
       groupLevel.work
     } catch {
-      case ctsEx: CtsUrnException => assert(ctsEx.message == "No work defined in urn:cts:greekLit:tlg0012:")
-      case exc : Throwable => fail("Should have thrown a CtsUrnException: " + exc)
+      case ctsEx: CiteException => assert(ctsEx.message == "No work defined in urn:cts:greekLit:tlg0012:")
+      case exc : Throwable => fail("Should have thrown a CiteException: " + exc)
     }
   }
-  /*
 
-
-    val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
-
+  it should "retrieve a string value for a well-formed version identifier" in {
     val versionLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:")
-    val exemplarLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA.lextokens:")
-
+    assert(versionLevel.version == "msA")
   }
-
-  "The URN 'urn:cts:greekLit:tlg0012:'" should {
-    "have an empty string for version" in new Context {
-      groupLevel.version == ""
-    }
-  }
-  "The URN 'urn:cts:greekLit:tlg0012:'" should {
-    "have an empty string for exemplar" in new Context {
-      groupLevel.exemplar == ""
+  it should "throw a CtsUrn exception when trying to retrieve a non-existent version value" in {
+    val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
+    try {
+      groupLevel.version
+    } catch {
+      case ctsEx: CiteException => assert(ctsEx.message == "No version defined in urn:cts:greekLit:tlg0012:")
+      case exc : Throwable => fail("Should have thrown a CiteException: " + exc)
     }
   }
 
 
-  "The URN urn:cts:greekLit:tlg0012.tlg001:" should {
-    "have a text group" in new Context {
-      workLevel.textGroup == "tlg0012"
+  it should "retrieve a string value for a well-formed exemplar identifier" in {
+    val versionLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA.tokens:")
+    assert(versionLevel.exemplar == "tokens")
+  }
+  it should "throw a CtsUrn exception when trying to retrieve a non-existent exemplar value" in {
+    val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
+    try {
+      groupLevel.exemplar
+    } catch {
+      case ctsEx: CiteException => assert(ctsEx.message == "No exemplar defined in urn:cts:greekLit:tlg0012:")
+      case exc : Throwable => fail("Should have thrown a CiteException: " + exc)
     }
   }
-  "The URN urn:cts:greekLit:tlg0012.tlg001:" should {
-    "have a work" in new Context {
-      workLevel.work == "tlg001"
-    }
-  }
-  "The URN urn:cts:greekLit:tlg0012.tlg001:" should {
-    "have an empty string for version" in new Context {
-      workLevel.version == ""
-    }
-  }
-  "The URN urn:cts:greekLit:tlg0012.tlg001:" should {
-    "have an empty string for exemplar" in new Context {
-      workLevel.exemplar == ""
-    }
-  }
-*/
-
 }

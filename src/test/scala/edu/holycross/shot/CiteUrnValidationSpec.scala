@@ -4,17 +4,15 @@ package edu.holycross.shot.cite
 
 import org.scalatest.FlatSpec
 
-class TestCiteUrnValidation extends FlatSpec {
+class CiteUrnValidationSpec extends FlatSpec {
 
   "A CiteUrn" should "throw an IllegalArgumentException if too few components" in {
      try {
       CiteUrn("urn:cite:hmt")
      } catch {
-       case e: IllegalArgumentException =>
+       case e: IllegalArgumentException => assert(e.getMessage() == "requirement failed: wrong number of components in  urn:cite:hmt - 3")
        case _ : Throwable => fail("Constructor should have thrown an IllegalArgumentException exception")
      }
-    //  must  throwA[java.lang.IllegalArgumentException]
-   //}
   }
 
 /*

@@ -52,7 +52,7 @@ package cite {
       try {
         workOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CtsUrnException("No work defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No work defined in " + urnString)
       }
     }
 
@@ -71,7 +71,7 @@ package cite {
       try {
         versionOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CtsUrnException("No version defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No version defined in " + urnString)
       }
     }
 
@@ -90,7 +90,7 @@ package cite {
       try {
         exemplarOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CtsUrnException("No exemplar defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No exemplar defined in " + urnString)
       }
     }
 

@@ -7,18 +7,19 @@ package object cite {
     //type Ocho2Text = Vector[Ohco2Node]
       // a Vector of Ocho2Nodes
 
-
+  val subrefTextRE = """([^\[]+).*""".r
+  val subrefIndexRE = """[^\[]+\[([^\]]+)\]""".r
   /** Extracts the subref from a passage node value.
   *
   * @param s A passage node value, a reference to
   * a single node or to the beginning or ending node
   * of a range reference.
   */
-  def subref(s: String) = {
+  def subrefOption(s: String): Option[String] = {
     val psgSplit = s.split("@")
     psgSplit.size match {
-      case 2 => psgSplit(1)
-      case _ => ""
+      case 2 => Some(psgSplit(1))
+      case _ => None
     }
   }
 
@@ -30,13 +31,14 @@ package object cite {
   * of a range reference.
   */
   def subrefTextOption(s: String): Option[String] = {
+
     val psgSplit = s.split("@")
     psgSplit.size match {
       case 2 => {
-        val txtRE = """([^\[]+).+""".r
+
         psgSplit(1) match {
-         case txtRE(sr) => Some(sr)
-         case default => Some(default)
+         case subrefTextRE(sr) => Some(sr)
+         case default => None
         }
       }
       case _ => None
@@ -45,7 +47,7 @@ package object cite {
 
 
   /** Extracts the explicitly given index of a subref
-  * from a passage node value.
+  * from a passage node value, or the default value of 1.
   *
   * The index value must be an integer.
   * @param s A passage node value, a reference to
@@ -53,14 +55,17 @@ package object cite {
   * of a range reference.
   */
   def subrefIndexOption(subref: String): Option[Int] = {
-    // hairball RE to extract indexing string
-    // from within square brackets.
-    val idxRE = """[^\[]+\[([^\]]+)\]""".r
-    subref match {
-      case idxRE(i) => try {
-        Some(i.toInt)
-      } catch {
-        case e: NumberFormatException => throw CiteException("non-integer subreference index in " + subref)
+    val psgSplit = subref.split("@")
+    psgSplit.size match {
+      case 2 => {
+        psgSplit(1) match {
+          case subrefIndexRE(i) => try {
+            Some(i.toInt)
+          } catch {
+            case e: NumberFormatException => throw CiteException("non-integer subreference index in " + subref)
+          }
+          case s :  String => if (psgSplit(0).nonEmpty) Some(1) else None
+        }
       }
       case _ => None
     }

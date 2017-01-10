@@ -182,7 +182,7 @@ package cite {
     /** Full string value of the passage node's subref.*/
     def passageNodeSubrefOption: Option[String] = {
       try {
-        Some(subref(passageNode))
+        subrefOption(passageNode)
       } catch {
         case e: java.util.NoSuchElementException => None
         case otherEx : Throwable => throw( otherEx)
@@ -281,7 +281,7 @@ package cite {
     def rangeBeginSubrefOption = {
       rangeBeginOption match {
         case None => None
-        case _ =>  Some(subref(rangeBegin))
+        case _ =>  subrefOption(rangeBegin)
       }
     }
     def rangeBeginSubref = {
@@ -366,7 +366,7 @@ package cite {
     def rangeEndSubrefOption = {
       rangeEndOption match {
         case None => None
-        case _ =>  Some(subref(rangeEnd))
+        case _ =>  subrefOption(rangeEnd)
       }
     }
     def rangeEndSubref = {

@@ -6,7 +6,7 @@ import org.scalatest.FlatSpec
 
 class CiteUrnValidationSpec extends FlatSpec {
 
-  "A CiteUrn" should "throw an IllegalArgumentException if too few components" in {
+  "A CiteUrn" should "throw an IllegalArgumentException if there are too few components" in {
      try {
       CiteUrn("urn:cite:hmt")
      } catch {

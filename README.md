@@ -1,6 +1,6 @@
 # cite_scala
 
-The `io.github.cite_architecture.cite` package is a library written in Scala for working with citable objects.
+The `edu.holycross.shot.cite` package is a library written in Scala for working with citable objects.
 
 ## Why ?
 

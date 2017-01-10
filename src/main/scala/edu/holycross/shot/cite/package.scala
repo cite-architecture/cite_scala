@@ -29,17 +29,17 @@ package object cite {
   * a single node or to the beginning or ending node
   * of a range reference.
   */
-  def subrefText(s: String) = {
+  def subrefTextOption(s: String): Option[String] = {
     val psgSplit = s.split("@")
     psgSplit.size match {
       case 2 => {
         val txtRE = """([^\[]+).+""".r
         psgSplit(1) match {
-         case txtRE(sr) => sr
-         case default => default
+         case txtRE(sr) => Some(sr)
+         case default => Some(default)
         }
       }
-      case _ => ""
+      case _ => None
     }
   }
 
@@ -52,15 +52,15 @@ package object cite {
   * a single node or to the beginning or ending node
   * of a range reference.
   */
-  def subrefIndex(subref: String) = {
+  def subrefIndexOption(subref: String): Option[Int] = {
     // hairball RE to extract indexing string
     // from within square brackets.
     val idxRE = """[^\[]+\[([^\]]+)\]""".r
     subref match {
       case idxRE(i) => try {
-        i.toInt
+        Some(i.toInt)
       } catch {
-        case e: NumberFormatException => None
+        case e: NumberFormatException => throw CiteException("non-integer subreference index in " + subref)
       }
       case _ => None
     }

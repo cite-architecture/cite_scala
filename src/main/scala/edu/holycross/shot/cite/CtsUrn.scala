@@ -17,24 +17,24 @@ package cite {
     */
     val components = urnString.split(":")
 
+
+
+    /** Required namespace component of the URN.*/
+    val namespace: String = components(2)
+    /** Required work component of the URN.*/
+    val workComponent: String = components(3)
+    /** Array of dot-separate parts of the workComponent.*/
+    val workParts = workComponent.split("""\.""")
+    /** Textgroup part of work hierarchy.
+    */
+    val textGroup: String = workParts(0)
+
+
     // Verify syntax of submitted String:
     require(components(0) == "urn", "invalid URN syntax: " + urnString + ". First component must be 'urn'.")
     require(components(1) == "cts", "invalid URN syntax: " + urnString + ". Second component must be 'cts'.")
     require(componentSyntaxOk, "invalid URN syntax: " + urnString + ". Wrong number of components.")
     require((workParts.size < 5), "invalid URN syntax. Too many parts in work component " + workComponent )
-
-    /** Required namespace component of the URN.*/
-    def namespace = components(2)
-    /** Required work component of the URN.*/
-    def workComponent = components(3)
-    /** Array of dot-separate parts of the workComponent.*/
-    def workParts = workComponent.split("""\.""")
-    /** Textgroup part of work hierarchy.
-    */
-    def textGroup = workParts(0)
-
-
-
 
 
     /** Work part of work hierarchy.
@@ -188,6 +188,7 @@ package cite {
         case otherEx : Throwable => throw( otherEx)
       }
     }
+
     def passageNodeSubref = {
       try {
         passageNodeSubrefOption.get
@@ -197,25 +198,50 @@ package cite {
       }
     }
     /** Indexed text of the passage node's subref.*/
+    def passageNodeSubrefTextOption: Option[String] = {
+      try {
+        subrefTextOption(passageNode) match {
+          case None => None
+          case s: Some[String] => s
+        }
+
+      } catch {
+        case e: java.util.NoSuchElementException => None //throw CiteException("No individual node defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+
+    }
     def passageNodeSubrefText = {
       try {
-        subrefText(passageNode)
+        passageNodeSubrefTextOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node subreference defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+
+
+    /** Index value of the passage node's subref.*/
+    def passageNodeSubrefIndexOption: Option[Int] = {
+      try {
+       subrefIndexOption(passageNode) match {
+        case None => None
+        case i: Option[Int] => i
+      }
+
       } catch {
         case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
-
     }
-    /** Index value of the passage node's subref.*/
     def passageNodeSubrefIndex = {
       try {
-        subrefIndex(passageNode)
+        passageNodeSubrefIndexOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node subreference defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
-
 
     /** First range part of the passage component of the URN.
     *
@@ -229,7 +255,7 @@ package cite {
       try {
         rangeBeginOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range beginning defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -246,7 +272,7 @@ package cite {
       try {
         rangeBeginRefOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range beginning reference defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -262,7 +288,7 @@ package cite {
       try {
         rangeBeginSubrefOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range beginning subreference defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -270,28 +296,36 @@ package cite {
     def rangeBeginSubrefTextOption: Option[String] = {
       rangeBeginOption match {
         case None => None
-        case _ => Some(subrefText(rangeBegin))
+        case _ => subrefTextOption(rangeBegin)
       }
     }
     def rangeBeginSubrefText = {
       try {
         rangeBeginSubrefTextOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No indexed range beginning defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
 
     /** Index value of the range beginning's subref.*/
-    def rangeBeginSubrefIndex = {
+    def rangeBeginSubrefIndexOption = {
       try {
-        subrefIndex(rangeBegin)
+        subrefIndexOption(rangeBegin)
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => None //throw CiteException("No range beginning index defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
 
+    def rangeBeginSubrefIndex = {
+      try {
+        rangeBeginSubrefIndexOption.get
+      } catch {
+        case e: java.util.NoSuchElementException =>throw CiteException("No range beginning index defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
 
 
     /** Second range part of the passage component of the URN.
@@ -300,13 +334,13 @@ package cite {
     * or if the passage component is a node reference.
     */
     def rangeEndOption: Option[String] = {
-      if (passageParts.size > 2) Some(passageParts(1)) else None
+      if (passageParts.size > 1) Some(passageParts(1)) else None
     }
     def rangeEnd = {
       try {
         rangeEndOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range ending defined in " + urnString + " from passage parts " + passageParts.toVector)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -323,7 +357,7 @@ package cite {
       try {
         rangeEndRefOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range ending reference defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -339,7 +373,7 @@ package cite {
       try {
         rangeEndSubrefOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range ending subreference defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -347,39 +381,47 @@ package cite {
     def rangeEndSubrefTextOption: Option[String] = {
       rangeEndOption match {
         case None => None
-        case _ => Some(subrefText(rangeEnd))
+        case _ => subrefTextOption(rangeEnd)
       }
     }
     def rangeEndSubrefText = {
       try {
         rangeEndSubrefTextOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range endinging subreference text defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
 
     /** Index value of the range Endning's subref.*/
+    def rangeEndSubrefIndexOption = {
+      try {
+        subrefIndexOption(rangeEnd)
+      } catch {
+        case e: java.util.NoSuchElementException => None// throw CiteException("No range ending subreference index defined in " + urnString)
+        case otherEx : Throwable => throw( otherEx)
+      }
+    }
+
     def rangeEndSubrefIndex = {
       try {
-        subrefIndex(rangeEnd)
+        rangeEndSubrefIndexOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range ending subreference index defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
 
 
-
-
-/* **************************************************************************     */
     require(passageSyntaxOk, "Invalid URN syntax.  Error in passage component " + passageComponent)
 
     /** True if the URN refers to a range.*/
     def isRange = {
       passageComponent contains "-"
     }
-
+    def isPoint = {
+      !(isRange)
+    }
     /** True if URN's syntax for required components is valid.*/
     def componentSyntaxOk = {
       components.size match {
@@ -399,7 +441,8 @@ package cite {
           }
         }
         case 1 => if (passageComponent.contains("-")) false else true
-        case 2 => ((rangeBegin.size > 0) && (rangeEnd.size > 0))
+        case 2 => ((rangeBegin.nonEmpty) && (rangeEnd.nonEmpty))
+        case _ => throw CiteException("invalid URN string: more than two elements in range " + passageComponent)
       }
     }
 

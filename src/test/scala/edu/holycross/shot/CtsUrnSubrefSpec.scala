@@ -95,7 +95,20 @@ class CtsUrnSubrefSpec extends FlatSpec {
         case ex: Throwable => fail("Unrecognized exception " + ex)
       }
   }
+  it should "have a string value for a subref on the first node of a range without index" in {
+    val rangeSubref = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath-1.2")
 
+    assert(rangeSubref.rangeBeginSubref == "wrath")
+
+    rangeSubref.passageNodeSubrefOption match {
+      case None => assert(true)
+      case _ => fail("Should not have found a subreference")
+    }
+    rangeSubref.rangeEndSubrefOption match {
+      case None => assert(true)
+      case _ => fail("Should not have found a subreference")
+    }
+  }
 
   /*(){
 

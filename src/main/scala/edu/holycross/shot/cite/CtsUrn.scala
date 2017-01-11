@@ -185,6 +185,7 @@ package cite {
         subrefOption(passageNode)
       } catch {
         case e: java.util.NoSuchElementException => None
+        case citeEx: CiteException => None
         case otherEx : Throwable => throw( otherEx)
       }
     }

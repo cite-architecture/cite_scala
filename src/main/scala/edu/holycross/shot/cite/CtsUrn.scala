@@ -136,12 +136,6 @@ package cite {
       }
     }
 
-    /* * Depth of citation hierarchy. */
-    // What is best value in case of range? Deepest?
-    // Or shouldn't we better have depth on each node,
-    // as we do with subreferencing?
-    //def passageDepth = {}
-
 
     /** Single node of the passage component of the URN.
     *
@@ -156,7 +150,7 @@ package cite {
         passageNodeOption.get
       }  catch {
         case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
-      case otherEx : Throwable => throw( otherEx)
+        case otherEx : Throwable => throw( otherEx)
       }
     }
 
@@ -200,17 +194,21 @@ package cite {
     }
     /** Indexed text of the passage node's subref.*/
     def passageNodeSubrefTextOption: Option[String] = {
-      try {
-        subrefTextOption(passageNode) match {
-          case None => None
-          case s: Some[String] => s
+      passageNodeSubrefOption match {
+        case None => None
+        case _ => {
+          try {
+            subrefTextOption(passageNode) match {
+              case None => None
+              case s: Some[String] => s
+            }
+
+          } catch {
+            case e: java.util.NoSuchElementException => None
+            case otherEx : Throwable => throw( otherEx)
+          }
         }
-
-      } catch {
-        case e: java.util.NoSuchElementException => None //throw CiteException("No individual node defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
       }
-
     }
     def passageNodeSubrefText = {
       try {
@@ -231,7 +229,7 @@ package cite {
       }
 
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No individual node defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node subreference index defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -304,7 +302,7 @@ package cite {
       try {
         rangeBeginSubrefTextOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No indexed range beginning defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range beginning subreference text defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -390,7 +388,7 @@ package cite {
       try {
         rangeEndSubrefTextOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range endinging subreference text defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No range ending subreference text defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }

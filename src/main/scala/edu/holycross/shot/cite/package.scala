@@ -1,14 +1,16 @@
 package edu.holycross.shot
 
-/** The cite library supports working with canonical identifers
+/** Library for working with canonical identifers
 * used in citing scholarly resources. */
 package object cite {
-    // or a type...
-    //type Ocho2Text = Vector[Ohco2Node]
-      // a Vector of Ocho2Nodes
 
+
+  /** Regular expression matching text part of a subreference on a CTS URN passage node.*/
   val subrefTextRE = """([^\[]+).*""".r
+  /** Regular expression matching the index part of a subreference on a CTS URN passage node.*/
   val subrefIndexRE = """[^\[]+\[([^\]]+)\]""".r
+
+
   /** Extracts the subref from a passage node value.
   *
   * @param s A passage node value, a reference to
@@ -70,5 +72,5 @@ package object cite {
       case _ => None
     }
   }
-  
+
 }

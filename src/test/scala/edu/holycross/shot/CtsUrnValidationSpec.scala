@@ -97,11 +97,11 @@ class CtsUrnValidationSpec extends FlatSpec {
     assert (! pointUrn.isRange)
     assert (pointUrn.isPoint)
   }
-  it should "freak out if there are empty passage components" in pending /*{
+  it should "freak out if there are empty passage components" in pending
+  it should "freak out if there are empty work components" in pending
+  /*{
     val badUrn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1...10")
     println("BAD: " + badUrn.passageParts.size)
   }
-// check for empty passage components!
-// check for non-integer indexing on subref
 */
 }

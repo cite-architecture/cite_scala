@@ -239,7 +239,7 @@ package cite {
       try {
         passageNodeSubrefIndexOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No individual node subreference defined in " + urnString)
+        case e: java.util.NoSuchElementException => throw CiteException("No individual node subreference index defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -314,7 +314,7 @@ package cite {
       try {
         subrefIndexOption(rangeBegin)
       } catch {
-        case e: java.util.NoSuchElementException => None //throw CiteException("No range beginning index defined in " + urnString)
+        case e: java.util.NoSuchElementException => None
         case citeEx: CiteException => None
         case otherEx : Throwable => throw( otherEx)
       }
@@ -324,7 +324,7 @@ package cite {
       try {
         rangeBeginSubrefIndexOption.get
       } catch {
-        case e: java.util.NoSuchElementException =>throw CiteException("No range beginning index defined in " + urnString)
+        case e: java.util.NoSuchElementException =>throw CiteException("No range beginning subreference index defined in " + urnString)
         case otherEx : Throwable => throw( otherEx)
       }
     }

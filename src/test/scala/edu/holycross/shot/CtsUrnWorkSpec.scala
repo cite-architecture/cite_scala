@@ -9,21 +9,21 @@ class CtsUrnWorkSpec extends FlatSpec {
     assert(groupLevel.textGroup == "tlg0012")
   }
 
-  it should "have an empty work option if no work is given" in {
+  it should "have an none option for work if no work is given" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     groupLevel.workOption match {
       case None => assert(1 == 1)
       case _ => fail("Incorrect option for work")
     }
   }
-  it should "have an empty version option if no version is given" in {
+  it should "have a none option for version if no version is given" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     groupLevel.versionOption match {
       case None => assert(true)
       case _ => fail("Incorrect option for work")
     }
   }
-  it should "have an empty exemplar option if no exemplar is given" in {
+  it should "have an none option for exemplar if no exemplar is given" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     groupLevel.versionOption match {
       case None => assert(true)
@@ -59,7 +59,6 @@ class CtsUrnWorkSpec extends FlatSpec {
       case exc : Throwable => fail("Should have thrown a CiteException: " + exc)
     }
   }
-
 
   it should "retrieve a string value for a well-formed exemplar identifier" in {
     val versionLevel = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA.tokens:")

@@ -64,7 +64,7 @@ def demoRange(u: CtsUrn) {
 
 }
 
-def showOff(s: String) {
+def urn(s: String) {
   val u = CtsUrn(s)
 
   println("For CTS URN " + u)

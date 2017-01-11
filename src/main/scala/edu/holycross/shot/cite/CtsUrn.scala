@@ -490,15 +490,19 @@ package cite {
     * @param urn CtsUrn to compare to this one.
     */
     def passageContainedIn(urn: CtsUrn): Boolean = {
-      val psg = urn.dropSubref.passageComponent
-      val str = "(^" + psg + """\.)|(^""" + psg + "$)"
-      val pttrn = str.r
+      if ((passageParts.isEmpty) || (urn.passageParts.isEmpty)) {
+        true
+      } else {
+        val psg = urn.dropSubref.passageComponent
+        val str = "(^" + psg + """\.)|(^""" + psg + "$)"
+        val pttrn = str.r
 
-      val res = pttrn.findFirstIn(dropSubref.passageComponent.toString)
-      //("Result of matching  " + str + " in " + urn.toString + " == " + res)
-      res match {
-        case None => false
-        case _ => true
+        val res = pttrn.findFirstIn(dropSubref.passageComponent.toString)
+        //("Result of matching  " + str + " in " + urn.toString + " == " + res)
+        res match {
+          case None => false
+          case _ => true
+        }
       }
     }
 

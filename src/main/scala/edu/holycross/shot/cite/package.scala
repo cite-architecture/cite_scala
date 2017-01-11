@@ -70,7 +70,5 @@ package object cite {
       case _ => None
     }
   }
-
-
-
+  
 }

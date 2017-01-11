@@ -309,11 +309,12 @@ package cite {
     }
 
     /** Index value of the range beginning's subref.*/
-    def rangeBeginSubrefIndexOption = {
+    def rangeBeginSubrefIndexOption: Option[Int] = {
       try {
         subrefIndexOption(rangeBegin)
       } catch {
         case e: java.util.NoSuchElementException => None //throw CiteException("No range beginning index defined in " + urnString)
+        case citeEx: CiteException => None
         case otherEx : Throwable => throw( otherEx)
       }
     }
@@ -398,7 +399,8 @@ package cite {
       try {
         subrefIndexOption(rangeEnd)
       } catch {
-        case e: java.util.NoSuchElementException => None// throw CiteException("No range ending subreference index defined in " + urnString)
+        case e: java.util.NoSuchElementException => None
+        case citeEx: CiteException => None
         case otherEx : Throwable => throw( otherEx)
       }
     }

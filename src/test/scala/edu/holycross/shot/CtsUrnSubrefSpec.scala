@@ -25,7 +25,7 @@ class CtsUrnSubrefSpec extends FlatSpec {
   }
 
 
-    it should "have none options for all subref text and index pieces when there is no subref" in pending/* {
+    it should "have none options for all subref text and index pieces when there is no subref" in {
       val noSubref = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1")
 
       noSubref.passageNodeSubrefTextOption match {
@@ -55,7 +55,7 @@ class CtsUrnSubrefSpec extends FlatSpec {
         case _ => fail("Should not have found a subreference")
       }
 
-    }*/
+    }
 
   it should "have a string value for passage node when a subref is defined without index" in {
       val psgSubref = CtsUrn( "urn:cts:greekLit:tlg0012.tlg001.msA:1.1@wrath")

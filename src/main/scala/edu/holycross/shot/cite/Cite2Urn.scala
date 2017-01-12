@@ -5,17 +5,21 @@ package cite {
 
   /** A URN for a citable object in a collection.
   *
-  * @constructor create a new CiteUrn
-  * @param urnString String representation of CiteUrn validating
-  * against the CiteUrn specification
+  * @constructor create a new Cite2Urn
+  * @param urnString String representation of Cite2Urn validating
+  * against the Cite2Urn specification
   */
   case class Cite2Urn (val urnString: String) extends Urn {
+
+    // EXAMPLE:
+    // urn:cite:hmt:msA.release1:12r
+
 
     /** Array of four top-level, colon-delimited components.
     */
     val components = urnString.split(":")
 
-    require(components.size == 4, "wrong number of components in  " + urnString + " - " + components.size)
+    require(((components.size == 4) || (components.size == 5)), "wrong number of components in  " + urnString + " - " + components.size)
 
     // Verify syntax of submitted String:
     require(components(0) == "urn", "invalid URN syntax: " + urnString + ". First component must be 'urn'.")
@@ -25,7 +29,26 @@ package cite {
     val namespace = components(2)
 
     /** Required work component of the URN.*/
-    val objectComponent = components(3)
+    val collectionComponent = components(3)
+    val collectionParts = collectionComponent.split("""\.""")
+    val collection = collectionParts(0)
+
+
+    def objectComponentOption: Option[String] = {
+      components.size match {
+        case 5 => Some(components(4))
+        case _ => None
+      }
+    }
+    def objectComponent = {
+      try {
+        objectComponentOption.get
+      } catch {
+        case e: Throwable => "ERROR: " + e
+      }
+    }
+
+    /*
 
     val dotParts = objectComponent.split("""\.""")
     val collection = dotParts(0)
@@ -34,7 +57,7 @@ package cite {
     val objectString = dotParts.tail.mkString(".")
     val objectParts = objectString.split("-")
 
-
+*/
 
     /*
     def objOption: Option[String] = {
@@ -58,6 +81,9 @@ package cite {
     *
     * Value is an empty string if there is no version part.
     */
+
+
+    /*
     def versionOption: Option[String] = {
       objectParts.size match {
         case 3 => Some(objectParts(2))
@@ -124,7 +150,7 @@ package cite {
       }
     }
 
-    /** Full string value of the range beginning's subref.*/
+
     def rangeBeginSubrefOption = {
       rangeBeginOption match {
         case None => None
@@ -142,11 +168,7 @@ package cite {
 
 
 
-    /** Second range part of the passage component of the URN.
-    *
-    * Value is an empty string if there is no passage component
-    * or if the passage component is a node reference.
-    */
+
     def rangeEndOption: Option[String] = {
       if (passageParts.size > 1) Some(passageParts(1)) else None
     }
@@ -176,8 +198,7 @@ package cite {
       }
     }
 
-    /** Full string value of the range Endning's subref.*/
-    def rangeEndSubrefOption = {
+  def rangeEndSubrefOption = {
       rangeEndOption match {
         case None => None
         case _ =>  subrefOption(rangeEnd)
@@ -192,7 +213,7 @@ package cite {
       }
     }
 
-
+**/
 
 
     override def toString() = {

@@ -2,7 +2,7 @@ scalaVersion := "2.11.8"
 
 name := "cite"
 organization := "edu.holycross.shot"
-version := "2.0.1"
+version := "3.0.0"
 licenses += ("GPL-3.0", url("https://opensource.org/licenses/gpl-license"))
 
 

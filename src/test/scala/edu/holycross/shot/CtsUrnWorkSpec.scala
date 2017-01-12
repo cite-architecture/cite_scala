@@ -9,7 +9,7 @@ class CtsUrnWorkSpec extends FlatSpec {
     assert(groupLevel.textGroup == "tlg0012")
   }
 
-  it should "have an none option for work if no work is given" in {
+  it should "have a none option for work if no work is given" in {
     val groupLevel = CtsUrn("urn:cts:greekLit:tlg0012:")
     groupLevel.workOption match {
       case None => assert(1 == 1)

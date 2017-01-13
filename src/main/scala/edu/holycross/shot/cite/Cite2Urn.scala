@@ -44,10 +44,29 @@ package cite {
       try {
         objectComponentOption.get
       } catch {
-        case e: Throwable => "ERROR: " + e
+        case e: NoSuchElementException => throw CiteException("No object component defined in " + urnString)
+        case otherE: Throwable => "ERROR: " + otherE
       }
     }
 
+    val objectParts: Vector[String] = {
+      objectComponentOption match {
+        case None => Vector.empty[String]
+        case s: Some[String] => {
+          val parts = s.get.split("-")
+          parts.size match {
+            case 2 => parts.toVector
+            case 1 => parts.toVector
+            case _ => throw CiteException("Invalid object component syntax: " + urnString)
+          }
+        }
+      }
+    }
+
+    val isRange = {
+      (objectParts.size == 2)
+    }
+    val isObject = { !(isRange)}
     /*
 
     val dotParts = objectComponent.split("""\.""")
@@ -77,16 +96,9 @@ package cite {
 
 */
 
-    /** Version part of work hierarchy.
-    *
-    * Value is an empty string if there is no version part.
-    */
-
-
-    /*
     def versionOption: Option[String] = {
-      objectParts.size match {
-        case 3 => Some(objectParts(2))
+      collectionParts.size match {
+        case 2 => Some(collectionParts(1))
         case _ => None
       }
     }
@@ -97,7 +109,7 @@ package cite {
         case e: java.util.NoSuchElementException => throw CiteException("No version defined in " + urnString)
       }
     }
-
+/*
 
     // Still need to add subreff on single nodes
     def objectSubrefOption: Option[String] = {

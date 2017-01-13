@@ -76,6 +76,12 @@ class Cite2UrnValidationSpec extends FlatSpec {
       case _ => fail("Should have created none option")
     }
   }
-  it should "retrieve"
-
+  it should "identify a range reference as a range and not a node" in {
+    val urn = Cite2Urn("urn:cite:hmt:msA.release1:12r-24v")
+    assert (urn.isRange)
+  }
+  it should "identify a node reference as a node and not a range" in {
+    val urn = Cite2Urn("urn:cite:hmt:msA.release1:12r")
+    assert (urn.isObject)
+  }
 }

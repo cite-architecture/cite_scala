@@ -23,15 +23,42 @@ package cite {
 
     // Verify syntax of submitted String:
     require(components(0) == "urn", "invalid URN syntax: " + urnString + ". First component must be 'urn'.")
-    require(components(1) == "cite", "invalid URN syntax: " + urnString + ". Second component must be 'cite'.")
+    require(components(1) == "cite2", "invalid URN syntax: " + urnString + ". Second component must be 'cite'.")
 
     /** Required namespace component of the URN.*/
     val namespace = components(2)
 
+
+    /////////// Collection component
     /** Required work component of the URN.*/
     val collectionComponent = components(3)
     val collectionParts = collectionComponent.split("""\.""")
     val collection = collectionParts(0)
+
+
+    def versionOption: Option[String] = {
+      collectionParts.size match {
+        case 2 => Some(collectionParts(1))
+        case _ => None
+      }
+    }
+    def version = {
+      try {
+        versionOption.get
+      } catch {
+        case e: java.util.NoSuchElementException => throw CiteException("No version defined in " + urnString)
+      }
+    }
+
+
+    // final requirements for collection syntax
+    require(((collectionParts.size == 1) || (collectionParts.size == 2)), "invalid syntax in collection component of " + urnString)
+
+    for (p <- collectionParts) {
+      require(p.nonEmpty, "invalid value: empty value in collection component in " + urnString)
+    }
+    /////////// Object component
+    //
 
 
     def objectComponentOption: Option[String] = {
@@ -62,171 +89,59 @@ package cite {
         }
       }
     }
-
     val isRange = {
       (objectParts.size == 2)
     }
     val isObject = { !(isRange)}
-    /*
 
-    val dotParts = objectComponent.split("""\.""")
-    val collection = dotParts(0)
-    require((dotParts.size < 4) && (dotParts.size > 0), "invalid number of parts in object component " + objectComponent + " - " + dotParts.size)
 
-    val objectString = dotParts.tail.mkString(".")
-    val objectParts = objectString.split("-")
 
-*/
 
-    /*
-    def objOption: Option[String] = {
+    // ranges
+    val rangeBeginOption : Option[String] = {
       objectParts.size match {
-        case 2 => Some(objectParts(1))
-        case 3 => Some(objectParts(1))
+        case 2 => Some(objectParts(0))
         case _ => None
       }
     }
-    def obj = {
-      try {
-        objOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No object defined in " + urnString)
-      }
-    }
 
-*/
-
-    def versionOption: Option[String] = {
-      collectionParts.size match {
-        case 2 => Some(collectionParts(1))
-        case _ => None
-      }
-    }
-    def version = {
-      try {
-        versionOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No version defined in " + urnString)
-      }
-    }
-/*
-
-    // Still need to add subreff on single nodes
-    def objectSubrefOption: Option[String] = {
-      try {
-        subrefOption(passageNode)
-      } catch {
-        case e: java.util.NoSuchElementException => None
-        case citeEx: CiteException => None
-        case otherEx : Throwable => throw( otherEx)
-      }
-    }
-
-    def objectSubref = {
-      try {
-        objectSubrefOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No individual node subref defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
-      }
-    }
-    // Still need to add range URNs
-    // Still need to add subreff on range nodes
-
-    def rangeBeginOption: Option[String] = {
-      if (passageParts.size > 1) Some(passageParts(0)) else None
-    }
-    def rangeBegin = {
+    def rangeBegin: String = {
       try {
         rangeBeginOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range beginning defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
-      }
-    }
-    def rangeBeginParts = {
-      rangeBeginOption match {
-        case None => Array.empty[String]
-        case _ => rangeBegin.split("@")
-      }
-    }
-    def rangeBeginRefOption: Option[String] = {
-      if (rangeBeginParts.isEmpty) None else Some(rangeBeginParts(0))
-    }
-    def rangeBeginRef = {
-      try {
-        rangeBeginRefOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range beginning reference defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
-      }
-    }
-
-
-    def rangeBeginSubrefOption = {
-      rangeBeginOption match {
-        case None => None
-        case _ =>  subrefOption(rangeBegin)
-      }
-    }
-    def rangeBeginSubref = {
-      try {
-        rangeBeginSubrefOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range beginning subreference defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
+        case e: NoSuchElementException => throw CiteException("No range beginning defined in " + urnString)
+        case ex: Throwable => throw(ex)
       }
     }
 
 
 
-
-    def rangeEndOption: Option[String] = {
-      if (passageParts.size > 1) Some(passageParts(1)) else None
+    val rangeEndOption : Option[String] = {
+      objectParts.size match {
+        case 2 => Some(objectParts(1))
+        case _ => None
+      }
     }
     def rangeEnd = {
       try {
         rangeEndOption.get
       } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range ending defined in " + urnString + " from passage parts " + passageParts.toVector)
-        case otherEx : Throwable => throw( otherEx)
-      }
-    }
-    def rangeEndParts = {
-      rangeEndOption match {
-        case None => Array.empty[String]
-        case _ => rangeEnd.split("@")
-      }
-    }
-    def rangeEndRefOption: Option[String] = {
-      if (rangeEndParts.isEmpty) None else Some(rangeEndParts(0))
-    }
-    def rangeEndRef = {
-      try {
-        rangeEndRefOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range ending reference defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
+        case e: NoSuchElementException => throw CiteException("No range ending defined in " + urnString)
+        case ex: Throwable => throw(ex)
       }
     }
 
-  def rangeEndSubrefOption = {
-      rangeEndOption match {
-        case None => None
-        case _ =>  subrefOption(rangeEnd)
-      }
-    }
-    def rangeEndSubref = {
-      try {
-        rangeEndSubrefOption.get
-      } catch {
-        case e: java.util.NoSuchElementException => throw CiteException("No range ending subreference defined in " + urnString)
-        case otherEx : Throwable => throw( otherEx)
-      }
-    }
+    // final requirements for object syntax
 
-**/
-
+    require(((objectParts.size >= 0) && (objectParts.size <= 2)), "invalid syntax in object component of " + urnString)
+    if (isObject) {
+      require ((urnString.contains("-") == false),"invalid range syntax in object component of " + urnString)
+    } else {
+      require (urnString.contains("-"), "invalid range syntax in object component of " + urnString)
+    }
+    for (p <- objectParts) {
+      require(p.nonEmpty, "invalid value: empty value in object component in " + urnString)
+    }
 
     override def toString() = {
       urnString

@@ -17,8 +17,6 @@ package cite {
     */
     val components = urnString.split(":")
 
-
-
     /** Required namespace component of the URN.*/
     val namespace: String = components(2)
     /** Required work component of the URN.*/
@@ -429,6 +427,45 @@ package cite {
         case 5 => true
         case 4 => if (urnString.takeRight(1) == ":") true else false
         case _ => false
+      }
+    }
+
+
+    for (p <- workParts) {
+      require(p.nonEmpty, "invalid work syntax in " + urnString)
+    }
+    for (p <- passageParts) {
+      require(p.nonEmpty,"invalid passage syntax in " + urnString)
+    }
+    for (p <- passageNodeParts) {
+      require(p.nonEmpty, "invalid passage syntax in passage node " + urnString)
+    }
+    for (p <- rangeBeginParts) {
+      require(p.nonEmpty,"invalid passage syntax in range beginning" + urnString)
+    }
+    for (p <- rangeEndParts) {
+      require(p.nonEmpty,"invalid passage syntax in range ending" + urnString)
+    }
+    passageComponentOption match {
+      case None => assert(true)
+      case _ => {
+        if (isRange) {
+          val r1DotParts = rangeBegin.split("""\.""")
+          for (p <- r1DotParts) {
+            require(p.nonEmpty,"invalid passage syntax in range beginning of " + urnString)
+          }
+
+          val r2DotParts = rangeEnd.split("""\.""")
+          for (p <- r2DotParts) {
+            require(p.nonEmpty,"invalid passage syntax in range ending of " + urnString)
+          }
+
+        }  else {
+          val nodeDotParts = passageNode.split("""\.""")
+          for (p <- nodeDotParts) {
+            require(p.nonEmpty,"invalid passage syntax in " + urnString)
+          }
+        }
       }
     }
 

@@ -20,7 +20,7 @@ package cite {
 
     // Verify syntax of submitted String:
     require(components(0) == "urn", "invalid URN syntax: " + urnString + ". First component must be 'urn'.")
-    require(components(1) == "cite2", "invalid URN syntax: " + urnString + ". Second component must be 'cite'.")
+    require(components(1) == "cite2", "invalid URN syntax: " + urnString + ". Second component must be 'cite2'.")
 
     /** Required namespace component of the URN.*/
     val namespace = components(2)
@@ -92,6 +92,13 @@ package cite {
     val isObject = { objectParts.size == 1}
 
 
+    // single object
+    val objectOption: Option[String] = {
+      objectParts.size match {
+        case 1 => Some(objectParts(0))
+        case _ => None
+      }
+    }
 
 
     // ranges
@@ -236,6 +243,37 @@ package cite {
         case s: Some[String] => s.get
       }
     }
+
+
+    // URN manipulations
+    def dropExtensions: Cite2Urn = {
+      val baseStr = Vector("urn","cite2",namespace,collection).mkString(":")
+      if (isRange) {
+        Cite2Urn(baseStr + ":" + rangeBeginParts(0) + "-" + rangeEndParts(0))
+      } else if (singleObjectParts.size > 0) {
+        Cite2Urn(baseStr + ":" + singleObjectParts(0))
+      } else {
+        Cite2Urn(baseStr + ":" )
+      }
+    }
+
+    /// urn matching
+    def collectionsMatch(u: Cite2Urn) : Boolean = {
+      if (collectionComponent == u.collectionComponent) {
+        true
+      }  else if ((u.collectionParts.size == 1) && (collection == u.collection)) {
+        true
+      } else if ((collectionParts.size == 1) &&  (collection == u.collection)) {
+        true
+      } else {
+        false
+      }
+    }
+
+
+
+
+    /// stringifications
 
     override def toString() = {
       urnString

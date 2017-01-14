@@ -510,8 +510,8 @@ package cite {
     * @param urn CtsUrn to compare to this one.
     */
     def workContainedIn(urn: CtsUrn): Boolean = {
-      val psg = urn.workComponent
-      val str = "(^" + psg + """\.)|(^""" + psg + "$)"
+      val wrk = urn.workComponent
+      val str = "(^" + wrk + """\.)|(^""" + wrk + "$)"
       val pttrn = str.r
 
       val res = pttrn.findFirstIn(workComponent.toString)

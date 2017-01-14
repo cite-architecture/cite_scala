@@ -144,16 +144,19 @@ package cite {
 
     // extended references
     def singleObjectParts: Vector[String] = {
-      if (objectParts.isEmpty) {
-        Vector.empty[String]
-      } else {
-        val objParts = objectParts(0).split("@")
-        if (objParts.size > 2) {
-          throw CiteException("Invalid extended reference in " + urnString)
-        } else {
-          objParts.toVector
+
+      objectParts.size match {
+        case 1 => {
+          val objParts = objectParts(0).split("@")
+          if (objParts.size > 2) {
+            throw CiteException("Invalid extended reference in " + urnString)
+          } else {
+            objParts.toVector
+          }
         }
+        case _ => Vector.empty[String]
       }
+
     }
     def rangeBeginParts: Vector[String] = {
       if (objectParts.isEmpty) {
@@ -214,7 +217,7 @@ package cite {
       }
     }
     def rangeBeginExtension = {
-      objectExtensionOption match {
+      rangeBeginExtensionOption match {
         case None => throw CiteException("No extended reference in range beginning of " + urnString)
         case s: Some[String] => s.get
       }
@@ -228,7 +231,7 @@ package cite {
       }
     }
     def rangeEndExtension = {
-      objectExtensionOption match {
+      rangeEndExtensionOption match {
         case None => throw CiteException("No extended reference in range ending of " + urnString)
         case s: Some[String] => s.get
       }
@@ -261,17 +264,17 @@ package cite {
         collectionComponent,
         collectionParts,
         collection,
-        versionOption.getOrElse(""),
-        objectComponentOption.getOrElse(""),
+        versionOption.getOrElse("none"),
+        objectComponentOption.getOrElse("none"),
         objectParts,
         isRange,
         isObject,
         singleObjectParts,
-        objectExtensionOption.getOrElse(""),
+        objectExtensionOption.getOrElse("none"),
         rangeBeginParts,
         rangeEndParts,
-        rangeBeginExtensionOption.getOrElse(""),
-        rangeEndExtensionOption.getOrElse("")
+        rangeBeginExtensionOption.getOrElse("none"),
+        rangeEndExtensionOption.getOrElse("none")
 
 
 

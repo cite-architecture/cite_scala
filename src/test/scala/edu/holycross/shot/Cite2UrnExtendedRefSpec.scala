@@ -23,19 +23,40 @@ class Cite2UrnExtendedRefSpec extends FlatSpec {
   }
 
   it should "have a string value for a object subref when the subref is defined" in {
-    val urn = Cite2Urn("urn:cite2:demo:img1@x,y,wdth,hght")
+    val urn = Cite2Urn("urn:cite2:demo:imglist:img1@x,y,wdth,hght")
     assert (urn.objectExtension == "x,y,wdth,hght")
-
   }
-it should "have a string value for an object subref when the subref includes an explicit index" in pending
-it should "have a string value for a subref on the first node of a range without index" in pending
-it should "have a string value for a subref on the first node of a range when a subref includes an explicit index" in pending
 
-it should "throw a Cite exception when trying to retrieve a non-existent subref value on the first node of a range" in pending
+  it should "have a string value for a subref on the first node of a range" in {
+    val urn = Cite2Urn("urn:cite2:demo:imglist:img1@x,y,wdth,hght-img2")
+    assert (urn.rangeBeginExtension == "x,y,wdth,hght")
+  }
 
-it should "have a string value for a subref on the second node of a range without index" in pending
-it should "have a string value for a subref on the second node of a range when a subref includes an explicit index" in pending
-it should "throw a Cite exception when trying to retrieve a non-existent subref value on the second node of a range" in pending
+  it should "throw a Cite exception when trying to retrieve a non-existent subref value on the first node of a range" in  {
+    try {
+      val u = Cite2Urn("urn:cite2:demo:imglist:img1-img2")
+      u.rangeBeginExtension
+      fail("Should not have found range beginning extension")
+    } catch {
+      case ce: CiteException => assert(ce.message == "No extended reference in range beginning of urn:cite2:demo:imglist:img1-img2")
+      case e: Throwable => fail("Unexpected exception " + e)
+    }
+  }
+
+  it should "have a string value for a subref on the second node of a range" in {
+    val urn = Cite2Urn("urn:cite2:demo:imglist:img1-img2@x,y,wdth,hght")
+    assert (urn.rangeEndExtension == "x,y,wdth,hght")
+  }
+
+  it should "throw a Cite exception when trying to retrieve a non-existent subref value on the second node of a range" in {
+    try {
+      val u = Cite2Urn("urn:cite2:demo:imglist:img1-img2")
+      u.rangeEndExtension
+      fail("Should not have found range ending extension")
+    } catch {
+      case ce: CiteException => assert(ce.message == "No extended reference in range ending of urn:cite2:demo:imglist:img1-img2")
+      case e: Throwable => fail("Unexpected exception " + e)
+    }}
 
 it should "have string values for subrefs on both nodes of a range without index" in pending
 it should "have a string value for subrefs on both nodes of a range when the subrefs include an explicit index" in pending

@@ -11,9 +11,6 @@ package cite {
   */
   case class Cite2Urn (val urnString: String) extends Urn {
 
-    // EXAMPLE:
-    // urn:cite:hmt:msA.release1:12r
-
 
     /** Array of four top-level, colon-delimited components.
     */
@@ -32,7 +29,7 @@ package cite {
     /////////// Collection component
     /** Required work component of the URN.*/
     val collectionComponent = components(3)
-    val collectionParts = collectionComponent.split("""\.""")
+    val collectionParts = collectionComponent.split("""\.""").toVector
     val collection = collectionParts(0)
 
 
@@ -92,7 +89,7 @@ package cite {
     val isRange = {
       (objectParts.size == 2)
     }
-    val isObject = { !(isRange)}
+    val isObject = { objectParts.size == 1}
 
 
 
@@ -137,14 +134,149 @@ package cite {
     if (isObject) {
       require ((urnString.contains("-") == false),"invalid range syntax in object component of " + urnString)
     } else {
-      require (urnString.contains("-"), "invalid range syntax in object component of " + urnString)
+      if (isRange) {
+        require (urnString.contains("-"), "invalid range syntax in object component of " + urnString)
+      } else {}
     }
     for (p <- objectParts) {
       require(p.nonEmpty, "invalid value: empty value in object component in " + urnString)
     }
 
+    // extended references
+    def singleObjectParts: Vector[String] = {
+      if (objectParts.isEmpty) {
+        Vector.empty[String]
+      } else {
+        val objParts = objectParts(0).split("@")
+        if (objParts.size > 2) {
+          throw CiteException("Invalid extended reference in " + urnString)
+        } else {
+          objParts.toVector
+        }
+      }
+    }
+    def rangeBeginParts: Vector[String] = {
+      if (objectParts.isEmpty) {
+        Vector.empty[String]
+      } else {
+        if (isRange) {
+          val rbegin = rangeBegin.split("@").toVector
+          if (rbegin.size > 2) {
+            throw CiteException("Invalid extended reference on range beginning part of " + urnString)
+          } else {
+            rbegin
+          }
+
+        } else {
+          Vector.empty[String]
+        }
+      }
+    }
+    def rangeEndParts: Vector[String] = {
+      if (objectParts.isEmpty) {
+        Vector.empty[String]
+      } else {
+        if (isRange) {
+          val rend = rangeEnd.split("@").toVector
+          if (rend.size > 2) {
+            throw CiteException("Invalid extended reference on range ending part of " + urnString)
+          } else {
+            rend
+          }
+
+        } else {
+          Vector.empty[String]
+        }
+      }
+    }
+
+    def objectExtensionOption : Option[String] = {
+      singleObjectParts.size match {
+        case 0 => None
+        case 1 => None
+        case 2 => Some(singleObjectParts(1))
+      }
+    }
+    def objectExtension = {
+      objectExtensionOption match {
+        case None => throw CiteException("No extended reference in " + urnString)
+        case s: Some[String] => s.get
+      }
+    }
+
+
+
+    def rangeBeginExtensionOption : Option[String] = {
+      rangeBeginParts.size match {
+        case 0 => None
+        case 1 => None
+        case 2 => Some(rangeBeginParts(1))
+      }
+    }
+    def rangeBeginExtension = {
+      objectExtensionOption match {
+        case None => throw CiteException("No extended reference in range beginning of " + urnString)
+        case s: Some[String] => s.get
+      }
+    }
+
+    def rangeEndExtensionOption : Option[String] = {
+      rangeEndParts.size match {
+        case 0 => None
+        case 1 => None
+        case 2 => Some(rangeEndParts(1))
+      }
+    }
+    def rangeEndExtension = {
+      objectExtensionOption match {
+        case None => throw CiteException("No extended reference in range ending of " + urnString)
+        case s: Some[String] => s.get
+      }
+    }
+
     override def toString() = {
       urnString
+    }
+    val labels = Vector(
+      "URN",
+      "Collection component",
+      "Collection parts",
+      "Collection",
+      "Version option",
+      "Object component option",
+      "Object parts",
+      "Is range",
+      "Is object",
+      "Single object parts",
+      "Object extension option",
+      "Range begin parts",
+      "Range end parts",
+      "Range begin extension option",
+      "Range end extension option"
+
+    )
+    def debugString = {
+      val valueList = Vector(
+        urnString,
+        collectionComponent,
+        collectionParts,
+        collection,
+        versionOption.getOrElse(""),
+        objectComponentOption.getOrElse(""),
+        objectParts,
+        isRange,
+        isObject,
+        singleObjectParts,
+        objectExtensionOption.getOrElse(""),
+        rangeBeginParts,
+        rangeEndParts,
+        rangeBeginExtensionOption.getOrElse(""),
+        rangeEndExtensionOption.getOrElse("")
+
+
+
+      )
+      labels.zip(valueList).map {case (lbl,display) => lbl + ": " + display }
     }
   }
 

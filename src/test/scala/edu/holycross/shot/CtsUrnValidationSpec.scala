@@ -97,7 +97,7 @@ class CtsUrnValidationSpec extends FlatSpec {
     assert (! pointUrn.isRange)
     assert (pointUrn.isPoint)
   }
-  it should "throw an exception if there are empty components in a passage reference" in {
+  it should "throw an exception if there are empty components within a passage reference" in {
     try {
      val urn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1...10")
      fail("Should not have created urn " + urn)
@@ -108,7 +108,7 @@ class CtsUrnValidationSpec extends FlatSpec {
   }
 
 
-  it should "throw an exception if there are empty components in the first node of a range reference" in {
+  it should "throw an exception if there are empty components within the first node of a range reference" in {
     try {
      val urn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1...1-1.7")
      fail("Should not have created urn " + urn)
@@ -117,7 +117,7 @@ class CtsUrnValidationSpec extends FlatSpec {
      case otherE: Throwable => throw CiteException("Unexpected exception: " + otherE)
    }
   }
-  it should "throw an exception if there are empty components in the second node of a range reference" in {
+  it should "throw an exception if there are empty components within the second node of a range reference" in {
     try {
      val urn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1-1...7")
      fail("Should not have created urn " + urn)
@@ -127,7 +127,7 @@ class CtsUrnValidationSpec extends FlatSpec {
    }
   }
 
-  it should "freak out if there are empty work components" in {
+  it should "throw an exception if there are empty components within the work reference" in {
     try {
       val urn = CtsUrn("urn:cts:greekLit:tlg0012..tlg001:1.1")
       fail("Should not have created urn " + urn)
@@ -135,5 +135,13 @@ class CtsUrnValidationSpec extends FlatSpec {
         case e: IllegalArgumentException => assert(e.getMessage() == "requirement failed: invalid work syntax in urn:cts:greekLit:tlg0012..tlg001:1.1")
       }
   }
+  it should "throw an exception if there are leading periods in the passage component" in pending
+  it should "throw an exception if there are trailing periods in the passage component" in pending
+
+  it should "throw an exception if there are leading periods in the range beginning part" in pending
+  it should "throw an exception if there are trailing periods in the range beginning part" in pending
+
+  it should "throw an exception if there are leading periods in the range ending part" in pending
+  it should "throw an exception if there are trailing periods in the range ending part" in pending
 
 }

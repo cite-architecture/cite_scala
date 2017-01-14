@@ -6,9 +6,27 @@ import org.scalatest.FlatSpec
 
 class Cite2UrnExtendedRefSpec extends FlatSpec {
 
-  "A Cite2Urn" should " have a none value for all subref options when no subref is defined" in pending
+  "A Cite2Urn" should " have a none value for all subref options when no subref is defined" in {
+    val urn = Cite2Urn("urn:cite2:hmt.release1:12r")
+    urn.objectExtensionOption match {
+      case None => assert (true)
+      case _ => fail("Should not have created extended reference on object")
+    }
+    urn.rangeBeginExtensionOption match {
+      case None => assert (true)
+      case _ => fail("Should not have created extended reference on range beginning")
+    }
+    urn.rangeEndExtensionOption match {
+      case None => assert (true)
+      case _ => fail("Should not have created extended reference on range ending")
+    }
+  }
 
-it should "have a string value for a object subref when the subref is defined without index" in pending
+  it should "have a string value for a object subref when the subref is defined" in {
+    val urn = Cite2Urn("urn:cite2:demo:img1@x,y,wdth,hght")
+    assert (urn.objectExtension == "x,y,wdth,hght")
+
+  }
 it should "have a string value for an object subref when the subref includes an explicit index" in pending
 it should "have a string value for a subref on the first node of a range without index" in pending
 it should "have a string value for a subref on the first node of a range when a subref includes an explicit index" in pending

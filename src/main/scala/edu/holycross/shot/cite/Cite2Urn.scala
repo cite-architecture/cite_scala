@@ -270,8 +270,13 @@ package cite {
       }
     }
 
+    def objectsMatch(u: Cite2Urn) : Boolean = {
+      dropExtensions == u.dropExtensions
+    }
 
-
+    def urnMatch(u: Cite2Urn): Boolean = {
+      (objectsMatch(u) && collectionsMatch(u))
+    }
 
     /// stringifications
 

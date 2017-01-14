@@ -100,13 +100,33 @@ class CtsUrnValidationSpec extends FlatSpec {
   it should "throw an exception if there are empty components in a passage reference" in {
     try {
      val urn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1...10")
-     println("For " +urn + ", passage parts = " + urn.passageParts.mkString("\n"))
      fail("Should not have created urn " + urn)
    } catch {
      case e: IllegalArgumentException => assert(e.getMessage() == "requirement failed: invalid passage syntax in urn:cts:greekLit:tlg0012.tlg001.msA:1...10")
      case otherE: Throwable => throw CiteException("Unexpected exception: " + otherE)
    }
   }
+
+
+  it should "throw an exception if there are empty components in the first node of a range reference" in {
+    try {
+     val urn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1...1-1.7")
+     fail("Should not have created urn " + urn)
+   } catch {
+     case e: IllegalArgumentException => assert(e.getMessage() == "requirement failed: invalid passage syntax in range beginning of urn:cts:greekLit:tlg0012.tlg001.msA:1...1-1.7")
+     case otherE: Throwable => throw CiteException("Unexpected exception: " + otherE)
+   }
+  }
+  it should "throw an exception if there are empty components in the second node of a range reference" in {
+    try {
+     val urn = CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msA:1.1-1...7")
+     fail("Should not have created urn " + urn)
+   } catch {
+     case e: IllegalArgumentException => assert(e.getMessage() == "requirement failed: invalid passage syntax in range ending of urn:cts:greekLit:tlg0012.tlg001.msA:1.1-1...7")
+     case otherE: Throwable => throw CiteException("Unexpected exception: " + otherE)
+   }
+  }
+
   it should "freak out if there are empty work components" in {
     try {
       val urn = CtsUrn("urn:cts:greekLit:tlg0012..tlg001:1.1")

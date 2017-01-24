@@ -559,8 +559,16 @@ package cite {
     def workMatch(urn: CtsUrn): Boolean = {
       workContainedIn(urn) || urn.workContainedIn(this)
     }
+
+
     def urnMatch(urn: CtsUrn): Boolean = {
       namespace == urn.namespace && workMatch(urn) && passageMatch(urn)
+    }
+    def urnMatch (u: Urn) : Boolean = {
+      u match {
+        case urn: CtsUrn => urnMatch(urn)
+        case _ => throw CiteException("Can only match CtsUrn against a second CtsUrn")
+      }
     }
 
     override def toString() = {

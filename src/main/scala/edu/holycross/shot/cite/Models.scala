@@ -5,7 +5,9 @@ package cite {
 
   /** The superclass of Urn objects, implemented by CtsUrn and CiteUrn.
   */
-  abstract class Urn {}
+  abstract class Urn {
+    def urnMatch(u: Urn): Boolean
+  }
 
   /** Trait for any citable scholarly resource.
   *

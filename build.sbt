@@ -1,18 +1,21 @@
 scalaVersion := "2.11.8"
+//crossScalaVersions := Seq("2.11.8", "2.12.1")
+
 
 name := "cite"
 organization := "edu.holycross.shot"
-version := "3.0.0"
-licenses += ("GPL-3.0", url("https://opensource.org/licenses/gpl-license"))
+version := "3.1.1"
+
+//licenses += ("GPL-3.0", url("https://opensource.org/licenses/gpl-license"))
 
 
 // dependencies for scalatest
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" %  "test"
-libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.2"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" %  "test"
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
 
 // dependencies for specs2
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-libraryDependencies += "org.specs2" %% "specs2-core" % "3.6.5" % "test"
+libraryDependencies += "org.specs2" %% "specs2-core" % "3.8.7" % "test"
 
 
 // can't get right resolver patterns for ammonite 0.8

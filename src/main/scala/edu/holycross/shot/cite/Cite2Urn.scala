@@ -274,6 +274,12 @@ package cite {
       dropExtensions == u.dropExtensions
     }
 
+    def urnMatch(u: Urn): Boolean = {
+      u match {
+        case urn: Cite2Urn => urnMatch(urn)
+        case _ => throw CiteException("Can only match Cite2Urn against a second Cite2Urn")
+      }
+    }
     def urnMatch(u: Cite2Urn): Boolean = {
       (objectsMatch(u) && collectionsMatch(u))
     }

@@ -31,7 +31,7 @@ function or property values accessible with simple member notation:
 
 ## Notes on the current state of the library
 
-Version 2.0.x of the library includes a full implementation of the `CtsUrn` class with extensive unit tests.  The `CiteUrn` is much more rudimentary.
+Version 3.x of the library includes very full implementations with extensive unit tests of the `CtsUrn` class and the newly defined `Cite2Urn` class.
 
 It uses `sbt` for its build system, and `scalatest` for unit testing.  Run all tests with `sbt test`; build scaladocs with `sbt doc`.
 
